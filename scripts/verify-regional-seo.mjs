@@ -24,12 +24,17 @@ async function get(path) {
 }
 const admin = await (await get("/api/admin/data")).json(),
   regional = admin.posts.filter((p) => p.area_key && p.status === "published");
-assert(regional.length > 100 && regional.length < 220);
+assert.equal(regional.length, 62, "39 current communes/wards plus 23 Ecopark articles");
+const communes = regional.filter((p) => p.area_key.startsWith("moi-"));
+assert.equal(communes.length, 39);
+assert.equal(communes.filter((p) => p.title.includes("xã ")).length, 33);
+assert.equal(communes.filter((p) => p.title.includes("phường ")).length, 6);
+assert(regional.every((p) => p.area_key.startsWith("moi-") || p.area_key.startsWith("ecopark-")));
 const ecopark = regional.filter((p) => p.area_key.startsWith("ecopark-"));
 assert.equal(ecopark.length, 23, "23 Ecopark location articles");
 assert.equal(new Set(ecopark.map((p) => p.slug)).size, 23);
 assert(ecopark.every((p) => p.category === "Dịch vụ tại Hưng Yên"));
-assert.equal(regional.filter((p) => p.area_key.startsWith("huyen-")).length, 10);
+
 const names = regional.map((p) =>
   p.title.replace(/^.*? tại /, "").normalize("NFC").trim().toLocaleLowerCase("vi"),
 );
@@ -58,7 +63,7 @@ const search = await (
 assert(search.includes("Yên Mỹ"));
 assert.match(search, /<meta name="robots" content="noindex, follow"/);
 pass("accent-free search works and search-result duplicates are not indexed");
-const partial = regional.find((p) => p.area_key.startsWith("cu-"));
+const partial = communes[0];
 assert(partial);
 const page = await (await get("/bai-viet/" + partial.slug)).text();
 assert(page.includes(partial.title.replace(/^.*? tại /, "")));
