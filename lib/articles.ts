@@ -55,7 +55,15 @@ async function archiveDuplicateRegionalArticles() {
     ));
   await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker, now()).run();
 }
+async function renameRegionalCategory() {
+  const marker = "regional-category-rename-v1";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  await db().prepare("UPDATE posts SET category='Dịch vụ tại Hưng Yên' WHERE area_key != '' AND category='Dịch vụ Hưng Yên'").run();
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker, now()).run();
+}
 export async function seedCompanyArticle() {
+  await renameRegionalCategory();
   await archiveDuplicateRegionalArticles();
   await refreshUneditedRegionalArticles();
   const marker = "editorial-regions-v1";
