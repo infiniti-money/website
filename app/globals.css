@@ -4759,3 +4759,13 @@ img, video { max-width: 100%; height: auto; }
   .catalog-pagination button { min-height: 44px; }
   .article-cover { height: auto; aspect-ratio: 16 / 9; }
 }
+
+
+/* Shareable product QR codes */
+.product-qr-link { border: 0; background: transparent; display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; color: #135b99; cursor: pointer; font-size: 12px; font-weight: 650; }
+.product-qr-link:hover { text-decoration: underline; }
+.product-qr-panel { margin: 18px 0; padding: 16px; border: 1px solid #dbe4ed; background: #f8fafc; border-radius: 14px; max-width: 320px; }
+.product-qr-panel > strong { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.product-qr-panel .product-qr-image { display: block; width: 220px; max-width: 100%; height: auto; aspect-ratio: 1; margin: 12px auto; border: 8px solid white; border-radius: 8px; }
+.product-qr-panel p { font-size: 12px; color: #52647b; line-height: 1.6; }
+@media (max-width: 520px) { .product-qr-panel { max-width: 100%; } .product-qr-link { min-height: 40px; } }
