@@ -67,13 +67,11 @@ export default async function ArticlesPage({ searchParams }: Props) {
             </select>
           </label>
           <label>
-            Địa danh
+            Khu vực
             <select name="group" defaultValue={f.group || ""}>
-              <option value="">Tất cả địa danh</option>
-              <option value="moi">Xã/phường mới năm 2025</option>
-              <option value="cu">Xã/phường/thị trấn</option>
-              <option value="truoc-2024">Xã/phường/thị trấn khác</option>
-              <option value="huyen">Huyện/thị xã/thành phố</option>
+              <option value="">Tất cả khu vực</option>
+              <option value="moi">39 xã/phường hiện hành</option>
+              <option value="ecopark">Các khu vực Ecopark</option>
             </select>
           </label>
           {f.tag && <input type="hidden" name="tag" value={f.tag} />}
