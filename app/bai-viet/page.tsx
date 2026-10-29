@@ -22,7 +22,7 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const f = await searchParams;
   return {
-    title: "Bài viết & Dịch vụ Hưng Yên | Infiniti Seller",
+    title: "Bài viết & Dịch vụ tại Hưng Yên | Infiniti Seller",
     description:
       "Tra cứu bài sửa máy tính, laptop, máy in, lắp camera, mạng và truyền hình theo các xã và huyện tại Hưng Yên.",
     alternates: {
@@ -63,7 +63,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
             <select name="category" defaultValue={f.category || ""}>
               <option value="">Tất cả bài viết</option>
               <option value="editorial">Giới thiệu & dịch vụ chung</option>
-              <option value="regional">Dịch vụ Hưng Yên</option>
+              <option value="regional">Dịch vụ tại Hưng Yên</option>
             </select>
           </label>
           <label>
