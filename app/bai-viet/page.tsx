@@ -71,6 +71,8 @@ export default async function ArticlesPage({ searchParams }: Props) {
             <select name="group" defaultValue={f.group || ""}>
               <option value="">Tất cả khu vực</option>
               <option value="moi">39 xã/phường hiện hành</option>
+              <option value="cu">Xã/phường trước sáp nhập 2025</option>
+              <option value="truoc-2024">Địa danh xã/phường trước 2024</option>
               <option value="ecopark">Các khu vực Ecopark</option>
             </select>
           </label>
