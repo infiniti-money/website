@@ -8,23 +8,7 @@ const kinds: Record<string, string> = {
   "thi-xa": "thị xã",
   "thanh-pho": "thành phố",
 };
-type OldUnit = {
-  id: string;
-  name: string;
-  kind: string;
-  districtId: string;
-  partial?: boolean;
-};
-const oldUnits = [
-  ...new Map(
-    data.newUnits.flatMap((u) => u.oldUnits).map((u) => [u.id, u]),
-  ).values(),
-] as OldUnit[];
 const district = (id: string) => data.districts.find((d) => d.id === id)!;
-const districtLabel = (id: string) => {
-  const d = district(id);
-  return `${kinds[d.kind]} ${d.name}`;
-};
 export type RegionalArea = {
   key: string;
   name: string;
@@ -34,84 +18,59 @@ export type RegionalArea = {
   details: string;
   related: { key: string; label: string }[];
 };
-const link = (key: string, label: string) =>
-  `[${label}](/bai-viet/dich-vu-tai-${key})`;
 const newKey = (id: string) => `moi-${id}`;
-const oldKey = (id: string) => `cu-${id}`;
-const newLabel = (u: { kind: string; name: string }) => `${kinds[u.kind]} ${u.name}`;
-const oldLabel = (u: OldUnit) => `${kinds[u.kind]} ${u.name}`;
+const newLabel = (u: { kind: string; name: string }) =>
+  `${kinds[u.kind]} ${u.name}`;
 export function regionalAreas(): RegionalArea[] {
   const current: RegionalArea[] = data.newUnits.map((u) => ({
     key: newKey(u.id),
     name: u.name,
     label: newLabel(u),
-    group: "Xã/phường mới 2025",
+    group: "Xã/phường hiện hành",
     districtIds: u.districtIds,
     details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
-    related: u.districtIds.map((id) => ({
-      key: `huyen-${id}`,
-      label: districtLabel(id),
-    })),
+    related: [],
   }));
-  const previous: RegionalArea[] = oldUnits.map((u) => {
-    const targets = data.newUnits.filter((n) =>
-      n.oldUnits.some((o) => o.id === u.id),
-    );
-    const legacy = data.legacyUnits.filter((l) =>
-      l.viaOldUnitIds.includes(u.id),
-    );
-    return {
-      key: oldKey(u.id),
-      name: u.name,
-      label: `${kinds[u.kind]} ${u.name}`,
-      group: "Xã/phường/thị trấn",
-      districtIds: [u.districtId],
-      details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
-      related: [
-        ...targets.map((n) => ({ key: newKey(n.id), label: newLabel(n) })),
-        { key: `huyen-${u.districtId}`, label: districtLabel(u.districtId) },
-      ],
-    };
-  });
-  const legacy: RegionalArea[] = data.legacyUnits.map((u) => {
-    const targets = data.newUnits.filter((n) =>
-      n.oldUnits.some((o) => u.viaOldUnitIds.includes(o.id)),
-    );
-    return {
-      key: `truoc-2024-${u.id}`,
-      name: u.name,
-      label: `${kinds[u.kind]} ${u.name}`,
-      group: "Xã/phường/thị trấn",
-      districtIds: [u.districtId],
-      details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
-      related: targets.map((n) => ({ key: newKey(n.id), label: newLabel(n) })),
-    };
-  });
-  const districts: RegionalArea[] = data.districts.map((d) => {
-    const previous = oldUnits.filter((u) => u.districtId === d.id);
-    const current = data.newUnits.filter((u) => u.districtIds.includes(d.id));
-    return {
-      key: `huyen-${d.id}`,
-      name: d.name,
-      label: `${kinds[d.kind]} ${d.name}`,
-      group: "Huyện/thị xã/thành phố",
-      districtIds: [d.id],
-      details: `Khi đặt lịch tại ${d.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
-      related: current
-        .map((u) => ({ key: newKey(u.id), label: newLabel(u) }))
-        .slice(0, 6),
-    };
-  });
-  // Ưu tiên tên hiện hành; mỗi tên xã/phường/thị trấn chỉ có một bài,
-  // không sinh bài trùng với danh sách trước sắp xếp.
-  const seen = new Set<string>();
-  return [...current, ...previous, ...legacy, ...districts].filter((area) => {
-    const key = area.label.normalize("NFC").trim().toLocaleLowerCase("vi");
-    if (seen.has(key)) return false;
-    seen.add(key);
+  const oldUnits = [
+    ...new Map(data.newUnits.flatMap((u) => u.oldUnits).map((u) => [u.id, u])).values(),
+  ];
+  const previous: RegionalArea[] = oldUnits.map((u) => ({
+    key: `cu-${u.id}`,
+    name: u.name,
+    label: `${kinds[u.kind]} ${u.name}`,
+    group: "Xã/phường/thị trấn",
+    districtIds: [u.districtId],
+    details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
+    related: [],
+  }));
+  const legacy: RegionalArea[] = data.legacyUnits.map((u) => ({
+    key: `truoc-2024-${u.id}`,
+    name: u.name,
+    label: `${kinds[u.kind]} ${u.name}`,
+    group: "Xã/phường/thị trấn",
+    districtIds: [u.districtId],
+    details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
+    related: [],
+  }));
+  const districts: RegionalArea[] = data.districts.map((d) => ({
+    key: `huyen-${d.id}`,
+    name: d.name,
+    label: `${kinds[d.kind]} ${d.name}`,
+    group: "Huyện/thị xã/thành phố",
+    districtIds: [d.id],
+    details: `Khi đặt lịch tại ${d.name}, vui lòng cung cấp địa chỉ và điểm hẹn cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
+    related: [],
+  }));
+  // Ưu tiên xã/phường hiện hành và chỉ bổ sung một bài cho tên chưa xuất hiện.
+  const seen = new Set(current.map((a) => a.label.normalize("NFC").trim().toLocaleLowerCase("vi")));
+  return [...current, ...[...previous, ...legacy, ...districts].filter((a) => {
+    const name = a.label.normalize("NFC").trim().toLocaleLowerCase("vi");
+    if (seen.has(name)) return false;
+    seen.add(name);
     return true;
-  });
+  })];
 }
+
 const serviceTags = [
   "Sửa máy tính",
   "Sửa laptop",
