@@ -81,7 +81,26 @@ async function seedEcoparkArticles() {
     ));
   await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker,date).run();
 }
+async function archiveNoncurrentHungYenArticles() {
+  const marker = "regional-current-39-v1";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  const allowed = new Set(regionalArticles().map((p) => p.area_key));
+  const existing = (await db().prepare(
+    "SELECT area_key FROM posts WHERE area_key != '' AND area_key NOT LIKE 'ecopark-%' AND status='published'",
+  ).all<{ area_key: string }>()).results;
+  const obsolete = existing.filter((p) => !allowed.has(p.area_key));
+  for (let i = 0; i < obsolete.length; i += 25)
+    await db().batch(obsolete.slice(i, i + 25).map((p) =>
+      db().prepare("UPDATE posts SET status='archived' WHERE area_key=? AND status='published'")
+        .bind(p.area_key),
+    ));
+  // Đánh dấu sau khi các lô hoàn tất, an toàn khi chạy lại sau lỗi giữa chừng.
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)")
+    .bind(marker, now()).run();
+}
 export async function seedCompanyArticle() {
+  await archiveNoncurrentHungYenArticles();
   await renameRegionalCategory();
   await archiveDuplicateRegionalArticles();
   await refreshUneditedRegionalArticles();
