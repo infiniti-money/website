@@ -34,7 +34,7 @@ export async function GET(request: Request) {
         const photo = photos.length ? photos[Math.floor(seed / 15) % photos.length] : undefined;
         const chosen = photo?.src?.large2x || photo?.src?.large;
         if (chosen && new URL(chosen).hostname === "images.pexels.com")
-          return Response.redirect(chosen, 302);
+          return new Response(null, { status: 302, headers: { Location: chosen, "Cache-Control": "public, max-age=86400" } });
       }
     } catch {
       // License-safe, generated illustration stays available during API failures.
