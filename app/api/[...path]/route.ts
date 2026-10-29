@@ -31,14 +31,14 @@ const customer = z.object({
 });
 const productInput = z.object({
   name: z.string().trim().min(2).max(160),
-  category: z.enum(["Laptop", "Máy tính PC", "Camera", "Máy in", "Phụ kiện"]),
+  category: z.enum(["Laptop", "Máy tính PC", "Điện thoại", "Tai nghe", "Máy in", "Máy photocopy", "Linh kiện PC", "Phụ kiện", "Phụ kiện máy in", "Phụ kiện máy photocopy", "Camera", "Thiết bị mạng"]),
   price: z.number().int().min(1000).max(999999999),
   original_price: z.number().int().min(0).max(999999999),
   stock: z.number().int().min(0).max(99999),
   image: z
     .string()
     .refine(
-      (s) => s.startsWith("/api/media/") || /^https:\/\//.test(s),
+      (s) => s === "/product-placeholder.svg" || s.startsWith("/api/media/") || /^https:\/\//.test(s),
       "Ảnh cần URL HTTPS hoặc ảnh đã tải lên.",
     ),
   description: z.string().max(4000),
@@ -404,6 +404,17 @@ async function handler(req: Request, ctx: Ctx) {
           settings: await shopSettings(),
           integrations: integrations(),
         });
+      }
+      if (method === "POST" && p === "admin/products/import") {
+        const payload = z.object({
+          products: z.array(productInput).min(1).max(50),
+        }).parse(await jsonBody(req));
+        const ids = payload.products.map(() => crypto.randomUUID());
+        await db().batch(payload.products.map((b, index) =>
+          db().prepare("INSERT INTO products (id,name,category,price,original_price,stock,image,description,specs,tag,active) VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+            .bind(ids[index],b.name,b.category,b.price,b.original_price,b.stock,b.image,b.description,b.specs,b.tag,b.active)
+        ));
+        return Response.json({ imported: ids.length, message: `Đã thêm ${ids.length} sản phẩm.` });
       }
       if (method === "POST" && p === "admin/products") {
         const b = productInput.parse(await jsonBody(req)),

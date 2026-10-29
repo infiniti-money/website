@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { templateXlsx, exportXlsx, productRows, importXlsx } from "@/lib/product-excel";
 import {
   LayoutDashboard,
   Package,
@@ -160,8 +161,38 @@ export default function Admin({
     [edit, setEdit] = useState<Partial<Product> | null>(null),
     [provider, setProvider] = useState<string | null>(null),
     [busy, setBusy] = useState(false),
+    [importReport, setImportReport] = useState(""),
     [sidebar, setSidebar] = useState(false);
   const [verifyOrder, setVerifyOrder] = useState<any>(null);
+  const excelInput = useRef<HTMLInputElement>(null);
+  async function handleExcel(file: File) {
+    setBusy(true); setImportReport("");
+    try {
+      const rows = await importXlsx(file);
+      const parsed = rows.map((row, i) => ({row: i+2, product: {
+        name: row.name, category: row.category, price: Number(row.price), original_price: Number(row.original_price),
+        stock: Number(row.stock), image: row.image || "/product-placeholder.svg", description: row.description,
+        specs: row.specs, tag: row.tag, active: Number(row.active),
+      }}));
+      const errors = parsed.filter(({product:p}) => !p.name || !categories.includes(p.category) || p.category === "Tất cả" ||
+        !Number.isInteger(p.price) || p.price < 1000 || p.price > 999999999 ||
+        !Number.isInteger(p.original_price) || p.original_price < 0 || p.original_price > 999999999 ||
+        !Number.isInteger(p.stock) || p.stock < 0 || p.stock > 99999 ||
+        ![0,1].includes(p.active) || p.name.length > 160 || p.description.length > 4000 || p.specs.length > 300 || p.tag.length > 40 ||
+        !(p.image === "/product-placeholder.svg" || p.image.startsWith("/api/media/") || /^https:\/\//.test(p.image)));
+      if(errors.length) throw new Error(`Có ${errors.length} dòng không hợp lệ (dòng ${errors.slice(0,10).map(x=>x.row).join(", ")}). Chưa nhập sản phẩm nào.`);
+      if(!parsed.length) throw new Error("File Excel không có sản phẩm.");
+      if(!window.confirm(`Nhập thêm ${parsed.length} sản phẩm? Các sản phẩm đã có sẽ không bị sửa.`)) return;
+      let count=0;
+      for(let i=0;i<parsed.length;i+=50){
+        const result=await api("admin/products/import",{products:parsed.slice(i,i+50).map(x=>x.product)});
+        count+=result.imported||0;
+      }
+      setImportReport(`Đã thêm ${count}/${parsed.length} sản phẩm từ Excel. Không thay đổi sản phẩm cũ.`);
+      toast.success(`Đã thêm ${count} sản phẩm`);await load();
+    }catch(error){const message=(error as Error).message;setImportReport(message);toast.error(message);}
+    finally{setBusy(false);if(excelInput.current)excelInput.current.value="";}
+  }
   async function load() {
     try {
       setData(await api("admin/data"));
@@ -430,6 +461,10 @@ export default function Admin({
                         onChange={(e) => setQuery(e.target.value)}
                       />
                     </div>
+                    <input type="file" ref={excelInput} accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden onChange={e=>{const file=e.target.files?.[0];if(file)void handleExcel(file);}} />
+                    <button type="button" className="btn btn-outline small" onClick={templateXlsx}><Download size={16}/> Excel mẫu</button>
+                    <button type="button" className="btn btn-outline small" onClick={()=>exportXlsx(productRows(data.products),"san-pham-infiniti-seller.xlsx")}><Download size={16}/> Xuất Excel</button>
+                    <button type="button" className="btn btn-outline small" disabled={busy} onClick={()=>excelInput.current?.click()}><Plus size={16}/> Nhập Excel</button>
                     <button
                       className="btn btn-blue small"
                       onClick={() =>
@@ -446,6 +481,7 @@ export default function Admin({
                       Thêm sản phẩm
                     </button>
                   </div>
+                  {importReport && <p className="form-note" role="status">{importReport}</p>}
                   <div className="admin-panel table-wrap">
                     <table>
                       <thead>
