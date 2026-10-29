@@ -6,3 +6,5 @@ CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 HARAVAN_ACCESS_TOKEN=
+# Optional: real service photos from Pexels; fallback is generated SVG.
+PEXELS_API_KEY=
