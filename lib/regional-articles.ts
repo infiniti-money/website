@@ -64,7 +64,7 @@ export function regionalAreas(): RegionalArea[] {
       key: oldKey(u.id),
       name: u.name,
       label: `${kinds[u.kind]} ${u.name}`,
-      group: "Xã/phường/thị trấn cũ 2025",
+      group: "Xã/phường/thị trấn",
       districtIds: [u.districtId],
       details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: [
@@ -81,7 +81,7 @@ export function regionalAreas(): RegionalArea[] {
       key: `truoc-2024-${u.id}`,
       name: u.name,
       label: `${kinds[u.kind]} ${u.name}`,
-      group: "Tên cũ trước 12/2024",
+      group: "Xã/phường/thị trấn",
       districtIds: [u.districtId],
       details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: targets.map((n) => ({ key: newKey(n.id), label: newLabel(n) })),
@@ -94,7 +94,7 @@ export function regionalAreas(): RegionalArea[] {
       key: `huyen-${d.id}`,
       name: d.name,
       label: `${kinds[d.kind]} ${d.name}`,
-      group: "Huyện/thị xã/thành phố cũ",
+      group: "Huyện/thị xã/thành phố",
       districtIds: [d.id],
       details: `Khi đặt lịch tại ${d.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: current
@@ -102,7 +102,15 @@ export function regionalAreas(): RegionalArea[] {
         .slice(0, 6),
     };
   });
-  return [...current, ...previous, ...legacy, ...districts];
+  // Ưu tiên tên hiện hành; mỗi tên xã/phường/thị trấn chỉ có một bài,
+  // không sinh bài trùng với danh sách trước sắp xếp.
+  const seen = new Set<string>();
+  return [...current, ...previous, ...legacy, ...districts].filter((area) => {
+    const key = area.label.normalize("NFC").trim().toLocaleLowerCase("vi");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 const serviceTags = [
   "Sửa máy tính",
@@ -123,7 +131,7 @@ export function regionalArticles() {
     excerpt: `Nhận yêu cầu sửa máy tính, laptop, máy in; lắp camera, mạng và hỗ trợ truyền hình tại ${area.label}. Xem giá tham khảo và đặt lịch 0867899987.`,
     tags: [
       ...serviceTags,
-      "Hưng Yên cũ",
+      "Hưng Yên",
       area.group,
       area.name,
       ...area.districtIds.map((id) => district(id).name),
@@ -207,7 +215,7 @@ Gọi [0867899987](tel:0867899987) hoặc [gửi ảnh thiết bị qua Zalo](ht
 
 ${area.related.map((r) => `- ${link(r.key, r.label)}.`).join("\n")}
 
-- [Tra cứu toàn bộ bài dịch vụ Hưng Yên cũ](/bai-viet?category=regional).
+- [Tra cứu toàn bộ bài dịch vụ Hưng Yên](/bai-viet?category=regional).
 
 *Ảnh bìa là ảnh minh họa.*`,
   }));
