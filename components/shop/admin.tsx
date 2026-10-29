@@ -64,6 +64,54 @@ const providerInfo: Record<
     ],
     docs: "https://cloudinary.com/documentation/upload_images",
   },
+  shopee: {
+    name: "Shopee Open Platform",
+    description: "Chuẩn bị kết nối gian hàng Shopee, sản phẩm và đơn hàng theo quyền ứng dụng được cấp. Chưa tự đồng bộ.",
+    keys: ["SHOPEE_PARTNER_ID", "SHOPEE_PARTNER_KEY", "SHOPEE_SHOP_ID"],
+    docs: "https://open.shopee.com/",
+  },
+  lazada: {
+    name: "Lazada Open Platform",
+    description: "Kết nối cửa hàng Lazada qua ứng dụng đối tác, cần thông tin API và ủy quyền từ chủ shop.",
+    keys: ["LAZADA_APP_KEY", "LAZADA_APP_SECRET"],
+    docs: "https://open.lazada.com/",
+  },
+  tiktokshop: {
+    name: "TikTok Shop",
+    description: "Kết nối gian hàng TikTok Shop qua API đối tác và cơ chế cấp quyền riêng cho cửa hàng.",
+    keys: ["TIKTOK_SHOP_APP_KEY", "TIKTOK_SHOP_APP_SECRET"],
+    docs: "https://partner.tiktokshop.com/",
+  },
+  tiki: {
+    name: "Tiki",
+    description: "Chuẩn bị tích hợp gian hàng Tiki và quyền API quản lý sản phẩm, đơn hàng từ đối tác.",
+    keys: ["TIKI_API_TOKEN"],
+    docs: "https://sellercenter.tiki.vn/",
+  },
+  shopify: {
+    name: "Shopify",
+    description: "Kết nối cửa hàng Shopify qua Admin API với quyền phù hợp để quản lý hàng hóa và đơn hàng.",
+    keys: ["SHOPIFY_SHOP_DOMAIN", "SHOPIFY_ADMIN_ACCESS_TOKEN"],
+    docs: "https://shopify.dev/docs/api/admin-graphql",
+  },
+  woocommerce: {
+    name: "WooCommerce",
+    description: "Kết nối website bán hàng WooCommerce bằng REST API key và URL website HTTPS.",
+    keys: ["WOOCOMMERCE_STORE_URL", "WOOCOMMERCE_CONSUMER_KEY", "WOOCOMMERCE_CONSUMER_SECRET"],
+    docs: "https://woocommerce.github.io/woocommerce-rest-api-docs/",
+  },
+  sapo: {
+    name: "Sapo",
+    description: "Chuẩn bị tích hợp dữ liệu bán hàng với Sapo khi tài khoản có quyền API tương ứng.",
+    keys: ["SAPO_API_KEY", "SAPO_API_SECRET"],
+    docs: "https://www.sapo.vn/",
+  },
+  kiotviet: {
+    name: "KiotViet",
+    description: "Kết nối phần mềm KiotViet thông qua thông tin API từ tài khoản bán hàng có quyền tích hợp.",
+    keys: ["KIOTVIET_CLIENT_ID", "KIOTVIET_CLIENT_SECRET", "KIOTVIET_RETAILER"],
+    docs: "https://www.kiotviet.vn/",
+  },
   viettelpost: {
     name: "Viettel Post",
     description: "Cấu hình tài khoản Viettel Post để chuẩn bị tích hợp vận đơn và tra cứu giao hàng. Chưa tự động tạo đơn.",
@@ -558,7 +606,7 @@ export default function Admin({
                   </div>
                   <h3 className="integration-section-heading">Thanh toán, hình ảnh và thương mại</h3>
                   <div className="integration-grid">
-                    {Object.entries(providerInfo).filter(([key]) => !["viettelpost","ghn","ghtk","jnt"].includes(key)).map(([key, p]) => (
+                    {Object.entries(providerInfo).filter(([key]) => !["viettelpost","ghn","ghtk","jnt","shopee","lazada","tiktokshop","tiki","shopify","woocommerce","sapo","kiotviet"].includes(key)).map(([key, p]) => (
                       <article
                         className="admin-panel integration-card"
                         key={key}
@@ -611,6 +659,19 @@ export default function Admin({
                         )}
                       </article>
                     ))}
+                  </div>
+                  <div className="admin-panel channels-panel">
+                    <div>
+                      <h3>Bán hàng đa nền tảng</h3>
+                      <p>Thiết lập gian hàng trên các sàn thương mại điện tử và hệ thống bán hàng. Các tích hợp dưới đây là hướng dẫn cấu hình, chưa đồng bộ sản phẩm, giá, tồn kho hoặc đơn hàng nếu chưa xây dựng và cấp quyền kết nối API.</p>
+                      <div className="shipping-provider-list">
+                        {(["shopee","lazada","tiktokshop","tiki","shopify","woocommerce","sapo","kiotviet"] as const).map((key) => (
+                          <button key={key} type="button" className="btn btn-outline small" onClick={() => setProvider(key)}>
+                            {providerInfo[key].name} · {data.integrations[key] ? "Đã cấu hình biến môi trường" : "Chưa cấu hình"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <div className="admin-panel channels-panel">
                     <div>
