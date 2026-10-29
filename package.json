@@ -10,7 +10,12 @@
     "build": "node scripts/run-framework.mjs build",
     "start": "node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js dev --config dist/server/wrangler.json --local --persist-to .wrangler/state --ip 127.0.0.1 --inspector-port 0",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "check:types": "tsc --noEmit",
+    "test:commerce": "node scripts/verify-commerce.mjs http://127.0.0.1:5175",
+    "test:seo": "node scripts/verify-regional-seo.mjs http://127.0.0.1:5175",
+    "test:content-wallets": "node scripts/verify-content-wallets.mjs http://127.0.0.1:5175",
+    "test:service-article": "node scripts/verify-service-article.mjs http://127.0.0.1:5175"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
