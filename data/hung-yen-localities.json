@@ -1,0 +1,1771 @@
+{
+  "asOf": "2025-07-01",
+  "scope": "Địa bàn tỉnh Hưng Yên trước sáp nhập cấp tỉnh năm 2025; không gồm địa bàn tỉnh Thái Bình cũ.",
+  "checkedOn": "2026-10-29",
+  "mappingNote": "Các đơn vị mới và loại hình xã/phường được ghi theo mốc 1/7/2025. Các tên cấp huyện và đơn vị cũ là địa danh lịch sử. Không coi đề án hoặc chủ trương thành lập phường năm 2026 là thay đổi đã có hiệu lực.",
+  "counts": {
+    "districts": 10,
+    "newUnits": 39,
+    "oldUnits": 139,
+    "legacyUnits": 32
+  },
+  "sources": [
+    {
+      "title": "Nghị quyết 1666/NQ-UBTVQH15: sắp xếp đơn vị hành chính cấp xã tỉnh Hưng Yên năm 2025",
+      "url": "https://xaydungchinhsach.chinhphu.vn/toan-van-nghi-quyet-so-1666-nq-ubtvqh15-sap-xep-cac-dvhc-cap-xa-cua-tinh-hung-yen-nam-2025-119250616195158879.htm",
+      "clauses": "Điều 1 khoản 1–33, 94–99; Điều 2"
+    },
+    {
+      "title": "Nghị quyết 1248/NQ-UBTVQH15: sắp xếp đơn vị hành chính tỉnh Hưng Yên giai đoạn 2023–2025",
+      "url": "https://congan.hungyen.gov.vn/nghi-quyet-so-1248nq-ubtvqh-sap-xep-don-vi-hanh-chinh-tinh-hung-yen-c229518.html",
+      "effective": "2024-12-01"
+    },
+    {
+      "title": "HĐND huyện Khoái Châu: phương án các đơn vị mới và các xã chuyển sang khu vực Yên Mỹ, Văn Giang",
+      "url": "https://ddbqhhdnd.hungyen.gov.vn/hdnd-cap-huyen-xa/hdnd-huyen-khoai-chau-to-chuc-ky-hop-thu-17-khoa-xx.html"
+    },
+    {
+      "title": "Cổng xã Tân Hưng: nguồn gốc Phương Nam, Tân Hưng thuộc thành phố Hưng Yên và Thủ Sỹ thuộc Tiên Lữ",
+      "url": "https://tanhung.hungyen.gov.vn/doan-cong-tac-uy-ban-kiem-tra-trung-uong-lam-viec-tai-xa-tan-hung-c25.html"
+    },
+    {
+      "title": "Nghị quyết HĐND tỉnh: phần xã Ngọc Thanh, huyện Kim Động chuyển vào phường Sơn Nam",
+      "url": "https://congbao-old.hungyen.gov.vn/congbao.nsf/324650F5F221159D47258C810027D4B7/%24file/NQ%20579.H%C4%90ND_signed.pdf"
+    }
+  ],
+  "districts": [
+    {
+      "id": "hung-yen",
+      "name": "Hưng Yên",
+      "kind": "thanh-pho"
+    },
+    {
+      "id": "tien-lu",
+      "name": "Tiên Lữ",
+      "kind": "huyen"
+    },
+    {
+      "id": "phu-cu",
+      "name": "Phù Cừ",
+      "kind": "huyen"
+    },
+    {
+      "id": "kim-dong",
+      "name": "Kim Động",
+      "kind": "huyen"
+    },
+    {
+      "id": "an-thi",
+      "name": "Ân Thi",
+      "kind": "huyen"
+    },
+    {
+      "id": "khoai-chau",
+      "name": "Khoái Châu",
+      "kind": "huyen"
+    },
+    {
+      "id": "yen-my",
+      "name": "Yên Mỹ",
+      "kind": "huyen"
+    },
+    {
+      "id": "van-lam",
+      "name": "Văn Lâm",
+      "kind": "huyen"
+    },
+    {
+      "id": "van-giang",
+      "name": "Văn Giang",
+      "kind": "huyen"
+    },
+    {
+      "id": "my-hao",
+      "name": "Mỹ Hào",
+      "kind": "thi-xa"
+    }
+  ],
+  "newUnits": [
+    {
+      "id": "xa-tan-hung",
+      "name": "Tân Hưng",
+      "kind": "xa",
+      "districtIds": [
+        "tien-lu",
+        "hung-yen"
+      ],
+      "clause": 1,
+      "oldUnits": [
+        {
+          "id": "xa-thu-sy-tien-lu",
+          "name": "Thủ Sỹ",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-phuong-nam-hung-yen",
+          "name": "Phương Nam",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-tan-hung-hung-yen",
+          "name": "Tân Hưng",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        }
+      ]
+    },
+    {
+      "id": "xa-hoang-hoa-tham",
+      "name": "Hoàng Hoa Thám",
+      "kind": "xa",
+      "districtIds": [
+        "tien-lu"
+      ],
+      "clause": 2,
+      "oldUnits": [
+        {
+          "id": "thi-tran-vuong-tien-lu",
+          "name": "Vương",
+          "kind": "thi-tran",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-hung-dao-tien-lu",
+          "name": "Hưng Đạo",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-nhat-tan-tien-lu",
+          "name": "Nhật Tân",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-an-vien-tien-lu",
+          "name": "An Viên",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        }
+      ]
+    },
+    {
+      "id": "xa-tien-lu",
+      "name": "Tiên Lữ",
+      "kind": "xa",
+      "districtIds": [
+        "tien-lu"
+      ],
+      "clause": 3,
+      "oldUnits": [
+        {
+          "id": "xa-thien-phien-tien-lu",
+          "name": "Thiện Phiến",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-hai-thang-tien-lu",
+          "name": "Hải Thắng",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-thuy-loi-tien-lu",
+          "name": "Thụy Lôi",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        }
+      ]
+    },
+    {
+      "id": "xa-tien-hoa",
+      "name": "Tiên Hoa",
+      "kind": "xa",
+      "districtIds": [
+        "tien-lu"
+      ],
+      "clause": 4,
+      "oldUnits": [
+        {
+          "id": "xa-le-xa-tien-lu",
+          "name": "Lệ Xá",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-trung-dung-tien-lu",
+          "name": "Trung Dũng",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        },
+        {
+          "id": "xa-cuong-chinh-tien-lu",
+          "name": "Cương Chính",
+          "kind": "xa",
+          "districtId": "tien-lu"
+        }
+      ]
+    },
+    {
+      "id": "xa-quang-hung",
+      "name": "Quang Hưng",
+      "kind": "xa",
+      "districtIds": [
+        "phu-cu"
+      ],
+      "clause": 5,
+      "oldUnits": [
+        {
+          "id": "thi-tran-tran-cao-phu-cu",
+          "name": "Trần Cao",
+          "kind": "thi-tran",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-minh-tan-phu-cu",
+          "name": "Minh Tân",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-tong-phan-phu-cu",
+          "name": "Tống Phan",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-quang-hung-phu-cu",
+          "name": "Quang Hưng",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        }
+      ]
+    },
+    {
+      "id": "xa-doan-dao",
+      "name": "Đoàn Đào",
+      "kind": "xa",
+      "districtIds": [
+        "phu-cu"
+      ],
+      "clause": 6,
+      "oldUnits": [
+        {
+          "id": "xa-phan-sao-nam-phu-cu",
+          "name": "Phan Sào Nam",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-minh-hoang-phu-cu",
+          "name": "Minh Hoàng",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-doan-dao-phu-cu",
+          "name": "Đoàn Đào",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        }
+      ]
+    },
+    {
+      "id": "xa-tien-tien",
+      "name": "Tiên Tiến",
+      "kind": "xa",
+      "districtIds": [
+        "phu-cu"
+      ],
+      "clause": 7,
+      "oldUnits": [
+        {
+          "id": "xa-dinh-cao-phu-cu",
+          "name": "Đình Cao",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-nhat-quang-phu-cu",
+          "name": "Nhật Quang",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-tien-tien-phu-cu",
+          "name": "Tiên Tiến",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        }
+      ]
+    },
+    {
+      "id": "xa-tong-tran",
+      "name": "Tống Trân",
+      "kind": "xa",
+      "districtIds": [
+        "phu-cu"
+      ],
+      "clause": 8,
+      "oldUnits": [
+        {
+          "id": "xa-tam-da-phu-cu",
+          "name": "Tam Đa",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-nguyen-hoa-phu-cu",
+          "name": "Nguyên Hòa",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        },
+        {
+          "id": "xa-tong-tran-phu-cu",
+          "name": "Tống Trân",
+          "kind": "xa",
+          "districtId": "phu-cu"
+        }
+      ]
+    },
+    {
+      "id": "xa-luong-bang",
+      "name": "Lương Bằng",
+      "kind": "xa",
+      "districtIds": [
+        "kim-dong"
+      ],
+      "clause": 9,
+      "oldUnits": [
+        {
+          "id": "thi-tran-luong-bang-kim-dong",
+          "name": "Lương Bằng",
+          "kind": "thi-tran",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-pham-ngu-lao-kim-dong",
+          "name": "Phạm Ngũ Lão",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-chinh-nghia-kim-dong",
+          "name": "Chính Nghĩa",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-dien-hong-kim-dong",
+          "name": "Diên Hồng",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        }
+      ]
+    },
+    {
+      "id": "xa-nghia-dan",
+      "name": "Nghĩa Dân",
+      "kind": "xa",
+      "districtIds": [
+        "kim-dong"
+      ],
+      "clause": 10,
+      "oldUnits": [
+        {
+          "id": "xa-dong-thanh-kim-dong",
+          "name": "Đồng Thanh",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-vinh-xa-kim-dong",
+          "name": "Vĩnh Xá",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-toan-thang-kim-dong",
+          "name": "Toàn Thắng",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-nghia-dan-kim-dong",
+          "name": "Nghĩa Dân",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        }
+      ]
+    },
+    {
+      "id": "xa-hiep-cuong",
+      "name": "Hiệp Cường",
+      "kind": "xa",
+      "districtIds": [
+        "kim-dong"
+      ],
+      "clause": 11,
+      "oldUnits": [
+        {
+          "id": "xa-song-mai-kim-dong",
+          "name": "Song Mai",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-hung-an-kim-dong",
+          "name": "Hùng An",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-hiep-cuong-kim-dong",
+          "name": "Hiệp Cường",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-ngoc-thanh-kim-dong",
+          "name": "Ngọc Thanh",
+          "kind": "xa",
+          "districtId": "kim-dong",
+          "partial": true
+        }
+      ]
+    },
+    {
+      "id": "xa-duc-hop",
+      "name": "Đức Hợp",
+      "kind": "xa",
+      "districtIds": [
+        "kim-dong"
+      ],
+      "clause": 12,
+      "oldUnits": [
+        {
+          "id": "xa-phu-tho-kim-dong",
+          "name": "Phú Thọ",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-mai-dong-kim-dong",
+          "name": "Mai Động",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        },
+        {
+          "id": "xa-duc-hop-kim-dong",
+          "name": "Đức Hợp",
+          "kind": "xa",
+          "districtId": "kim-dong"
+        }
+      ]
+    },
+    {
+      "id": "xa-an-thi",
+      "name": "Ân Thi",
+      "kind": "xa",
+      "districtIds": [
+        "an-thi"
+      ],
+      "clause": 13,
+      "oldUnits": [
+        {
+          "id": "thi-tran-an-thi-an-thi",
+          "name": "Ân Thi",
+          "kind": "thi-tran",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-quang-vinh-an-thi",
+          "name": "Quang Vinh",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-hoang-hoa-tham-an-thi",
+          "name": "Hoàng Hoa Thám",
+          "kind": "xa",
+          "districtId": "an-thi"
+        }
+      ]
+    },
+    {
+      "id": "xa-xuan-truc",
+      "name": "Xuân Trúc",
+      "kind": "xa",
+      "districtIds": [
+        "an-thi"
+      ],
+      "clause": 14,
+      "oldUnits": [
+        {
+          "id": "xa-van-du-an-thi",
+          "name": "Vân Du",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-quang-lang-an-thi",
+          "name": "Quảng Lãng",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-xuan-truc-an-thi",
+          "name": "Xuân Trúc",
+          "kind": "xa",
+          "districtId": "an-thi"
+        }
+      ]
+    },
+    {
+      "id": "xa-pham-ngu-lao",
+      "name": "Phạm Ngũ Lão",
+      "kind": "xa",
+      "districtIds": [
+        "an-thi"
+      ],
+      "clause": 15,
+      "oldUnits": [
+        {
+          "id": "xa-bac-son-an-thi",
+          "name": "Bắc Sơn",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-phu-ung-an-thi",
+          "name": "Phù Ủng",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-dao-duong-an-thi",
+          "name": "Đào Dương",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-bai-say-an-thi",
+          "name": "Bãi Sậy",
+          "kind": "xa",
+          "districtId": "an-thi"
+        }
+      ]
+    },
+    {
+      "id": "xa-nguyen-trai",
+      "name": "Nguyễn Trãi",
+      "kind": "xa",
+      "districtIds": [
+        "an-thi"
+      ],
+      "clause": 16,
+      "oldUnits": [
+        {
+          "id": "xa-dang-le-an-thi",
+          "name": "Đặng Lễ",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-cam-ninh-an-thi",
+          "name": "Cẩm Ninh",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-da-loc-an-thi",
+          "name": "Đa Lộc",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-nguyen-trai-an-thi",
+          "name": "Nguyễn Trãi",
+          "kind": "xa",
+          "districtId": "an-thi"
+        }
+      ]
+    },
+    {
+      "id": "xa-hong-quang",
+      "name": "Hồng Quang",
+      "kind": "xa",
+      "districtIds": [
+        "an-thi"
+      ],
+      "clause": 17,
+      "oldUnits": [
+        {
+          "id": "xa-ho-tung-mau-an-thi",
+          "name": "Hồ Tùng Mậu",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-tien-phong-an-thi",
+          "name": "Tiền Phong",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-ha-le-an-thi",
+          "name": "Hạ Lễ",
+          "kind": "xa",
+          "districtId": "an-thi"
+        },
+        {
+          "id": "xa-hong-quang-an-thi",
+          "name": "Hồng Quang",
+          "kind": "xa",
+          "districtId": "an-thi"
+        }
+      ]
+    },
+    {
+      "id": "xa-khoai-chau",
+      "name": "Khoái Châu",
+      "kind": "xa",
+      "districtIds": [
+        "khoai-chau"
+      ],
+      "clause": 18,
+      "oldUnits": [
+        {
+          "id": "thi-tran-khoai-chau-khoai-chau",
+          "name": "Khoái Châu",
+          "kind": "thi-tran",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-lien-khe-khoai-chau",
+          "name": "Liên Khê",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-phung-hung-khoai-chau",
+          "name": "Phùng Hưng",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-dong-ket-khoai-chau",
+          "name": "Đông Kết",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        }
+      ]
+    },
+    {
+      "id": "xa-trieu-viet-vuong",
+      "name": "Triệu Việt Vương",
+      "kind": "xa",
+      "districtIds": [
+        "khoai-chau"
+      ],
+      "clause": 19,
+      "oldUnits": [
+        {
+          "id": "xa-pham-hong-thai-khoai-chau",
+          "name": "Phạm Hồng Thái",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-tan-dan-khoai-chau",
+          "name": "Tân Dân",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-ong-dinh-khoai-chau",
+          "name": "Ông Đình",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-an-vi-khoai-chau",
+          "name": "An Vĩ",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        }
+      ]
+    },
+    {
+      "id": "xa-viet-tien",
+      "name": "Việt Tiến",
+      "kind": "xa",
+      "districtIds": [
+        "khoai-chau"
+      ],
+      "clause": 20,
+      "oldUnits": [
+        {
+          "id": "xa-dong-tien-khoai-chau",
+          "name": "Đồng Tiến",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-dan-tien-khoai-chau",
+          "name": "Dân Tiến",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-viet-hoa-khoai-chau",
+          "name": "Việt Hòa",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        }
+      ]
+    },
+    {
+      "id": "xa-chi-minh",
+      "name": "Chí Minh",
+      "kind": "xa",
+      "districtIds": [
+        "khoai-chau"
+      ],
+      "clause": 21,
+      "oldUnits": [
+        {
+          "id": "xa-thuan-hung-khoai-chau",
+          "name": "Thuần Hưng",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-nguyen-hue-khoai-chau",
+          "name": "Nguyễn Huệ",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-chi-minh-khoai-chau",
+          "name": "Chí Minh",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        }
+      ]
+    },
+    {
+      "id": "xa-chau-ninh",
+      "name": "Châu Ninh",
+      "kind": "xa",
+      "districtIds": [
+        "khoai-chau"
+      ],
+      "clause": 22,
+      "oldUnits": [
+        {
+          "id": "xa-dai-tap-khoai-chau",
+          "name": "Đại Tập",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-tu-dan-khoai-chau",
+          "name": "Tứ Dân",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-tan-chau-khoai-chau",
+          "name": "Tân Châu",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-dong-ninh-khoai-chau",
+          "name": "Đông Ninh",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        }
+      ]
+    },
+    {
+      "id": "xa-yen-my",
+      "name": "Yên Mỹ",
+      "kind": "xa",
+      "districtIds": [
+        "yen-my"
+      ],
+      "clause": 23,
+      "oldUnits": [
+        {
+          "id": "thi-tran-yen-my-yen-my",
+          "name": "Yên Mỹ",
+          "kind": "thi-tran",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-tan-lap-yen-my",
+          "name": "Tân Lập",
+          "kind": "xa",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-trung-hoa-yen-my",
+          "name": "Trung Hòa",
+          "kind": "xa",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-tan-minh-yen-my",
+          "name": "Tân Minh",
+          "kind": "xa",
+          "districtId": "yen-my"
+        }
+      ]
+    },
+    {
+      "id": "xa-viet-yen",
+      "name": "Việt Yên",
+      "kind": "xa",
+      "districtIds": [
+        "yen-my"
+      ],
+      "clause": 24,
+      "oldUnits": [
+        {
+          "id": "xa-yen-phu-yen-my",
+          "name": "Yên Phú",
+          "kind": "xa",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-thanh-long-yen-my",
+          "name": "Thanh Long",
+          "kind": "xa",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-viet-yen-yen-my",
+          "name": "Việt Yên",
+          "kind": "xa",
+          "districtId": "yen-my"
+        }
+      ]
+    },
+    {
+      "id": "xa-hoan-long",
+      "name": "Hoàn Long",
+      "kind": "xa",
+      "districtIds": [
+        "khoai-chau",
+        "yen-my"
+      ],
+      "clause": 25,
+      "oldUnits": [
+        {
+          "id": "xa-dong-tao-khoai-chau",
+          "name": "Đông Tảo",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-dong-than-yen-my",
+          "name": "Đồng Than",
+          "kind": "xa",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-hoan-long-yen-my",
+          "name": "Hoàn Long",
+          "kind": "xa",
+          "districtId": "yen-my"
+        }
+      ]
+    },
+    {
+      "id": "xa-nguyen-van-linh",
+      "name": "Nguyễn Văn Linh",
+      "kind": "xa",
+      "districtIds": [
+        "yen-my"
+      ],
+      "clause": 26,
+      "oldUnits": [
+        {
+          "id": "xa-ngoc-long-yen-my",
+          "name": "Ngọc Long",
+          "kind": "xa",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-lieu-xa-yen-my",
+          "name": "Liêu Xá",
+          "kind": "xa",
+          "districtId": "yen-my"
+        },
+        {
+          "id": "xa-nguyen-van-linh-yen-my",
+          "name": "Nguyễn Văn Linh",
+          "kind": "xa",
+          "districtId": "yen-my"
+        }
+      ]
+    },
+    {
+      "id": "xa-nhu-quynh",
+      "name": "Như Quỳnh",
+      "kind": "xa",
+      "districtIds": [
+        "van-lam"
+      ],
+      "clause": 27,
+      "oldUnits": [
+        {
+          "id": "thi-tran-nhu-quynh-van-lam",
+          "name": "Như Quỳnh",
+          "kind": "thi-tran",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-tan-quang-van-lam",
+          "name": "Tân Quang",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-lac-hong-van-lam",
+          "name": "Lạc Hồng",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-trung-trac-van-lam",
+          "name": "Trưng Trắc",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-dinh-du-van-lam",
+          "name": "Đình Dù",
+          "kind": "xa",
+          "districtId": "van-lam",
+          "partial": true
+        }
+      ]
+    },
+    {
+      "id": "xa-lac-dao",
+      "name": "Lạc Đạo",
+      "kind": "xa",
+      "districtIds": [
+        "van-lam"
+      ],
+      "clause": 28,
+      "oldUnits": [
+        {
+          "id": "xa-chi-dao-van-lam",
+          "name": "Chỉ Đạo",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-minh-hai-van-lam",
+          "name": "Minh Hải",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-lac-dao-van-lam",
+          "name": "Lạc Đạo",
+          "kind": "xa",
+          "districtId": "van-lam",
+          "partial": true
+        }
+      ]
+    },
+    {
+      "id": "xa-dai-dong",
+      "name": "Đại Đồng",
+      "kind": "xa",
+      "districtIds": [
+        "van-lam"
+      ],
+      "clause": 29,
+      "oldUnits": [
+        {
+          "id": "xa-viet-hung-van-lam",
+          "name": "Việt Hưng",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-luong-tai-van-lam",
+          "name": "Lương Tài",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-dai-dong-van-lam",
+          "name": "Đại Đồng",
+          "kind": "xa",
+          "districtId": "van-lam"
+        },
+        {
+          "id": "xa-dinh-du-van-lam",
+          "name": "Đình Dù",
+          "kind": "xa",
+          "districtId": "van-lam",
+          "partial": true
+        },
+        {
+          "id": "xa-lac-dao-van-lam",
+          "name": "Lạc Đạo",
+          "kind": "xa",
+          "districtId": "van-lam",
+          "partial": true
+        }
+      ]
+    },
+    {
+      "id": "xa-nghia-tru",
+      "name": "Nghĩa Trụ",
+      "kind": "xa",
+      "districtIds": [
+        "van-giang"
+      ],
+      "clause": 30,
+      "oldUnits": [
+        {
+          "id": "xa-long-hung-van-giang",
+          "name": "Long Hưng",
+          "kind": "xa",
+          "districtId": "van-giang"
+        },
+        {
+          "id": "xa-vinh-khuc-van-giang",
+          "name": "Vĩnh Khúc",
+          "kind": "xa",
+          "districtId": "van-giang"
+        },
+        {
+          "id": "xa-nghia-tru-van-giang",
+          "name": "Nghĩa Trụ",
+          "kind": "xa",
+          "districtId": "van-giang"
+        }
+      ]
+    },
+    {
+      "id": "xa-phung-cong",
+      "name": "Phụng Công",
+      "kind": "xa",
+      "districtIds": [
+        "van-giang"
+      ],
+      "clause": 31,
+      "oldUnits": [
+        {
+          "id": "xa-xuan-quan-van-giang",
+          "name": "Xuân Quan",
+          "kind": "xa",
+          "districtId": "van-giang"
+        },
+        {
+          "id": "xa-cuu-cao-van-giang",
+          "name": "Cửu Cao",
+          "kind": "xa",
+          "districtId": "van-giang"
+        },
+        {
+          "id": "xa-phung-cong-van-giang",
+          "name": "Phụng Công",
+          "kind": "xa",
+          "districtId": "van-giang"
+        }
+      ]
+    },
+    {
+      "id": "xa-van-giang",
+      "name": "Văn Giang",
+      "kind": "xa",
+      "districtIds": [
+        "van-giang"
+      ],
+      "clause": 32,
+      "oldUnits": [
+        {
+          "id": "xa-tan-tien-van-giang",
+          "name": "Tân Tiến",
+          "kind": "xa",
+          "districtId": "van-giang"
+        },
+        {
+          "id": "xa-lien-nghia-van-giang",
+          "name": "Liên Nghĩa",
+          "kind": "xa",
+          "districtId": "van-giang"
+        },
+        {
+          "id": "thi-tran-van-giang-van-giang",
+          "name": "Văn Giang",
+          "kind": "thi-tran",
+          "districtId": "van-giang"
+        }
+      ]
+    },
+    {
+      "id": "xa-me-so",
+      "name": "Mễ Sở",
+      "kind": "xa",
+      "districtIds": [
+        "khoai-chau",
+        "van-giang"
+      ],
+      "clause": 33,
+      "oldUnits": [
+        {
+          "id": "xa-binh-minh-khoai-chau",
+          "name": "Bình Minh",
+          "kind": "xa",
+          "districtId": "khoai-chau"
+        },
+        {
+          "id": "xa-thang-loi-van-giang",
+          "name": "Thắng Lợi",
+          "kind": "xa",
+          "districtId": "van-giang"
+        },
+        {
+          "id": "xa-me-so-van-giang",
+          "name": "Mễ Sở",
+          "kind": "xa",
+          "districtId": "van-giang"
+        }
+      ]
+    },
+    {
+      "id": "phuong-pho-hien",
+      "name": "Phố Hiến",
+      "kind": "phuong",
+      "districtIds": [
+        "hung-yen"
+      ],
+      "clause": 94,
+      "oldUnits": [
+        {
+          "id": "phuong-an-tao-hung-yen",
+          "name": "An Tảo",
+          "kind": "phuong",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "phuong-le-loi-hung-yen",
+          "name": "Lê Lợi",
+          "kind": "phuong",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "phuong-hien-nam-hung-yen",
+          "name": "Hiến Nam",
+          "kind": "phuong",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "phuong-minh-khai-hung-yen",
+          "name": "Minh Khai",
+          "kind": "phuong",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-trung-nghia-hung-yen",
+          "name": "Trung Nghĩa",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-lien-phuong-hung-yen",
+          "name": "Liên Phương",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        }
+      ]
+    },
+    {
+      "id": "phuong-son-nam",
+      "name": "Sơn Nam",
+      "kind": "phuong",
+      "districtIds": [
+        "hung-yen",
+        "kim-dong"
+      ],
+      "clause": 95,
+      "oldUnits": [
+        {
+          "id": "phuong-lam-son-hung-yen",
+          "name": "Lam Sơn",
+          "kind": "phuong",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-phu-cuong-hung-yen",
+          "name": "Phú Cường",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-hung-cuong-hung-yen",
+          "name": "Hùng Cường",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-bao-khe-hung-yen",
+          "name": "Bảo Khê",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-ngoc-thanh-kim-dong",
+          "name": "Ngọc Thanh",
+          "kind": "xa",
+          "districtId": "kim-dong",
+          "partial": true
+        }
+      ]
+    },
+    {
+      "id": "phuong-hong-chau",
+      "name": "Hồng Châu",
+      "kind": "phuong",
+      "districtIds": [
+        "hung-yen"
+      ],
+      "clause": 96,
+      "oldUnits": [
+        {
+          "id": "phuong-hong-chau-hung-yen",
+          "name": "Hồng Châu",
+          "kind": "phuong",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-quang-chau-hung-yen",
+          "name": "Quảng Châu",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        },
+        {
+          "id": "xa-hoang-hanh-hung-yen",
+          "name": "Hoàng Hanh",
+          "kind": "xa",
+          "districtId": "hung-yen"
+        }
+      ]
+    },
+    {
+      "id": "phuong-my-hao",
+      "name": "Mỹ Hào",
+      "kind": "phuong",
+      "districtIds": [
+        "my-hao"
+      ],
+      "clause": 97,
+      "oldUnits": [
+        {
+          "id": "phuong-ban-yen-nhan-my-hao",
+          "name": "Bần Yên Nhân",
+          "kind": "phuong",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "phuong-nhan-hoa-my-hao",
+          "name": "Nhân Hòa",
+          "kind": "phuong",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "phuong-phan-dinh-phung-my-hao",
+          "name": "Phan Đình Phùng",
+          "kind": "phuong",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "xa-cam-xa-my-hao",
+          "name": "Cẩm Xá",
+          "kind": "xa",
+          "districtId": "my-hao"
+        }
+      ]
+    },
+    {
+      "id": "phuong-duong-hao",
+      "name": "Đường Hào",
+      "kind": "phuong",
+      "districtIds": [
+        "my-hao"
+      ],
+      "clause": 98,
+      "oldUnits": [
+        {
+          "id": "phuong-di-su-my-hao",
+          "name": "Dị Sử",
+          "kind": "phuong",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "phuong-phung-chi-kien-my-hao",
+          "name": "Phùng Chí Kiên",
+          "kind": "phuong",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "xa-xuan-duc-my-hao",
+          "name": "Xuân Dục",
+          "kind": "xa",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "xa-hung-long-my-hao",
+          "name": "Hưng Long",
+          "kind": "xa",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "xa-ngoc-lam-my-hao",
+          "name": "Ngọc Lâm",
+          "kind": "xa",
+          "districtId": "my-hao"
+        }
+      ]
+    },
+    {
+      "id": "phuong-thuong-hong",
+      "name": "Thượng Hồng",
+      "kind": "phuong",
+      "districtIds": [
+        "my-hao"
+      ],
+      "clause": 99,
+      "oldUnits": [
+        {
+          "id": "phuong-bach-sam-my-hao",
+          "name": "Bạch Sam",
+          "kind": "phuong",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "phuong-minh-duc-my-hao",
+          "name": "Minh Đức",
+          "kind": "phuong",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "xa-duong-quang-my-hao",
+          "name": "Dương Quang",
+          "kind": "xa",
+          "districtId": "my-hao"
+        },
+        {
+          "id": "xa-hoa-phong-my-hao",
+          "name": "Hòa Phong",
+          "kind": "xa",
+          "districtId": "my-hao"
+        }
+      ]
+    }
+  ],
+  "legacyUnits": [
+    {
+      "id": "phuong-quang-trung-hung-yen",
+      "name": "Quang Trung",
+      "kind": "phuong",
+      "districtId": "hung-yen",
+      "viaOldUnitNames": [
+        "Lê Lợi"
+      ],
+      "viaOldUnitIds": [
+        "phuong-le-loi-hung-yen"
+      ]
+    },
+    {
+      "id": "xa-phuong-chieu-hung-yen",
+      "name": "Phương Chiểu",
+      "kind": "xa",
+      "districtId": "hung-yen",
+      "viaOldUnitNames": [
+        "Liên Phương",
+        "Phương Nam"
+      ],
+      "viaOldUnitIds": [
+        "xa-lien-phuong-hung-yen",
+        "xa-phuong-nam-hung-yen"
+      ],
+      "note": "Một phần diện tích 0,05 km² được nhập vào xã Liên Phương; phần còn lại hợp với xã Hồng Nam thành xã Phương Nam từ 1/12/2024.",
+      "partial": true
+    },
+    {
+      "id": "xa-hong-nam-hung-yen",
+      "name": "Hồng Nam",
+      "kind": "xa",
+      "districtId": "hung-yen",
+      "viaOldUnitNames": [
+        "Phương Nam"
+      ],
+      "viaOldUnitIds": [
+        "xa-phuong-nam-hung-yen"
+      ]
+    },
+    {
+      "id": "xa-minh-phuong-tien-lu",
+      "name": "Minh Phượng",
+      "kind": "xa",
+      "districtId": "tien-lu",
+      "viaOldUnitNames": [
+        "Cương Chính"
+      ],
+      "viaOldUnitIds": [
+        "xa-cuong-chinh-tien-lu"
+      ]
+    },
+    {
+      "id": "xa-duc-thang-tien-lu",
+      "name": "Đức Thắng",
+      "kind": "xa",
+      "districtId": "tien-lu",
+      "viaOldUnitNames": [
+        "Hải Thắng"
+      ],
+      "viaOldUnitIds": [
+        "xa-hai-thang-tien-lu"
+      ]
+    },
+    {
+      "id": "xa-hai-trieu-tien-lu",
+      "name": "Hải Triều",
+      "kind": "xa",
+      "districtId": "tien-lu",
+      "viaOldUnitNames": [
+        "Hải Thắng"
+      ],
+      "viaOldUnitIds": [
+        "xa-hai-thang-tien-lu"
+      ]
+    },
+    {
+      "id": "xa-ngo-quyen-tien-lu",
+      "name": "Ngô Quyền",
+      "kind": "xa",
+      "districtId": "tien-lu",
+      "viaOldUnitNames": [
+        "Vương"
+      ],
+      "viaOldUnitIds": [
+        "thi-tran-vuong-tien-lu"
+      ]
+    },
+    {
+      "id": "xa-di-che-tien-lu",
+      "name": "Dị Chế",
+      "kind": "xa",
+      "districtId": "tien-lu",
+      "viaOldUnitNames": [
+        "Vương"
+      ],
+      "viaOldUnitIds": [
+        "thi-tran-vuong-tien-lu"
+      ]
+    },
+    {
+      "id": "xa-minh-tien-phu-cu",
+      "name": "Minh Tiến",
+      "kind": "xa",
+      "districtId": "phu-cu",
+      "viaOldUnitNames": [
+        "Tiên Tiến"
+      ],
+      "viaOldUnitIds": [
+        "xa-tien-tien-phu-cu"
+      ]
+    },
+    {
+      "id": "xa-tho-vinh-kim-dong",
+      "name": "Thọ Vinh",
+      "kind": "xa",
+      "districtId": "kim-dong",
+      "viaOldUnitNames": [
+        "Phú Thọ"
+      ],
+      "viaOldUnitIds": [
+        "xa-phu-tho-kim-dong"
+      ]
+    },
+    {
+      "id": "xa-phu-thinh-kim-dong",
+      "name": "Phú Thịnh",
+      "kind": "xa",
+      "districtId": "kim-dong",
+      "viaOldUnitNames": [
+        "Phú Thọ"
+      ],
+      "viaOldUnitIds": [
+        "xa-phu-tho-kim-dong"
+      ]
+    },
+    {
+      "id": "xa-nhan-la-kim-dong",
+      "name": "Nhân La",
+      "kind": "xa",
+      "districtId": "kim-dong",
+      "viaOldUnitNames": [
+        "Diên Hồng"
+      ],
+      "viaOldUnitIds": [
+        "xa-dien-hong-kim-dong"
+      ]
+    },
+    {
+      "id": "xa-vu-xa-kim-dong",
+      "name": "Vũ Xá",
+      "kind": "xa",
+      "districtId": "kim-dong",
+      "viaOldUnitNames": [
+        "Diên Hồng"
+      ],
+      "viaOldUnitIds": [
+        "xa-dien-hong-kim-dong"
+      ]
+    },
+    {
+      "id": "xa-van-nhue-an-thi",
+      "name": "Văn Nhuệ",
+      "kind": "xa",
+      "districtId": "an-thi",
+      "viaOldUnitNames": [
+        "Đa Lộc"
+      ],
+      "viaOldUnitIds": [
+        "xa-da-loc-an-thi"
+      ]
+    },
+    {
+      "id": "xa-tan-phuc-an-thi",
+      "name": "Tân Phúc",
+      "kind": "xa",
+      "districtId": "an-thi",
+      "viaOldUnitNames": [
+        "Quang Vinh"
+      ],
+      "viaOldUnitIds": [
+        "xa-quang-vinh-an-thi"
+      ]
+    },
+    {
+      "id": "xa-hong-van-an-thi",
+      "name": "Hồng Vân",
+      "kind": "xa",
+      "districtId": "an-thi",
+      "viaOldUnitNames": [
+        "Hồng Quang"
+      ],
+      "viaOldUnitIds": [
+        "xa-hong-quang-an-thi"
+      ]
+    },
+    {
+      "id": "xa-hong-tien-khoai-chau",
+      "name": "Hồng Tiến",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Đồng Tiến"
+      ],
+      "viaOldUnitIds": [
+        "xa-dong-tien-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-dai-hung-khoai-chau",
+      "name": "Đại Hưng",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Chí Minh"
+      ],
+      "viaOldUnitIds": [
+        "xa-chi-minh-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-chi-tan-khoai-chau",
+      "name": "Chí Tân",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Chí Minh"
+      ],
+      "viaOldUnitIds": [
+        "xa-chi-minh-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-nhue-duong-khoai-chau",
+      "name": "Nhuế Dương",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Nguyễn Huệ"
+      ],
+      "viaOldUnitIds": [
+        "xa-nguyen-hue-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-thanh-cong-khoai-chau",
+      "name": "Thành Công",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Nguyễn Huệ"
+      ],
+      "viaOldUnitIds": [
+        "xa-nguyen-hue-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-ham-tu-khoai-chau",
+      "name": "Hàm Tử",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Phạm Hồng Thái"
+      ],
+      "viaOldUnitIds": [
+        "xa-pham-hong-thai-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-da-trach-khoai-chau",
+      "name": "Dạ Trạch",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Phạm Hồng Thái"
+      ],
+      "viaOldUnitIds": [
+        "xa-pham-hong-thai-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-binh-kieu-khoai-chau",
+      "name": "Bình Kiều",
+      "kind": "xa",
+      "districtId": "khoai-chau",
+      "viaOldUnitNames": [
+        "Khoái Châu"
+      ],
+      "viaOldUnitIds": [
+        "thi-tran-khoai-chau-khoai-chau"
+      ]
+    },
+    {
+      "id": "xa-nghia-hiep-yen-my",
+      "name": "Nghĩa Hiệp",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Nguyễn Văn Linh"
+      ],
+      "viaOldUnitIds": [
+        "xa-nguyen-van-linh-yen-my"
+      ]
+    },
+    {
+      "id": "xa-giai-pham-yen-my",
+      "name": "Giai Phạm",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Nguyễn Văn Linh"
+      ],
+      "viaOldUnitIds": [
+        "xa-nguyen-van-linh-yen-my"
+      ]
+    },
+    {
+      "id": "xa-ly-thuong-kiet-yen-my",
+      "name": "Lý Thường Kiệt",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Tân Minh"
+      ],
+      "viaOldUnitIds": [
+        "xa-tan-minh-yen-my"
+      ]
+    },
+    {
+      "id": "xa-tan-viet-yen-my",
+      "name": "Tân Việt",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Tân Minh"
+      ],
+      "viaOldUnitIds": [
+        "xa-tan-minh-yen-my"
+      ]
+    },
+    {
+      "id": "xa-yen-hoa-yen-my",
+      "name": "Yên Hòa",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Việt Yên"
+      ],
+      "viaOldUnitIds": [
+        "xa-viet-yen-yen-my"
+      ]
+    },
+    {
+      "id": "xa-minh-chau-yen-my",
+      "name": "Minh Châu",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Việt Yên"
+      ],
+      "viaOldUnitIds": [
+        "xa-viet-yen-yen-my"
+      ]
+    },
+    {
+      "id": "xa-viet-cuong-yen-my",
+      "name": "Việt Cường",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Việt Yên"
+      ],
+      "viaOldUnitIds": [
+        "xa-viet-yen-yen-my"
+      ]
+    },
+    {
+      "id": "xa-trung-hung-yen-my",
+      "name": "Trung Hưng",
+      "kind": "xa",
+      "districtId": "yen-my",
+      "viaOldUnitNames": [
+        "Yên Mỹ"
+      ],
+      "viaOldUnitIds": [
+        "thi-tran-yen-my-yen-my"
+      ]
+    }
+  ]
+}

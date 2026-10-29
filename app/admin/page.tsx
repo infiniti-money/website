@@ -2,7 +2,11 @@ import Admin from "@/components/shop/admin";
 import { requireChatGPTUser } from "@/app/chatgpt-auth";
 import { admin, seedCatalog } from "@/lib/server";
 export const dynamic = "force-dynamic";
-export default async function AdminPage() {
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   await requireChatGPTUser("/admin");
   try {
     await admin();
@@ -16,5 +20,5 @@ export default async function AdminPage() {
       </main>
     );
   }
-  return <Admin />;
+  return <Admin initialTab={(await searchParams).tab} />;
 }

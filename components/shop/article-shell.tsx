@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import BrandText from "./brand";
 import type { Post } from "@/lib/articles";
+import { postTags } from "@/lib/post-meta";
 export type PostSummary = Omit<Post, "body">;
 export function ArticleShell({ children }: { children: React.ReactNode }) {
   return (
@@ -61,6 +62,13 @@ export function PostCards({ posts }: { posts: PostSummary[] }) {
             <span className="pill">{p.category}</span>
             <h2>{p.title}</h2>
             <p>{p.excerpt}</p>
+            <div className="card-tags">
+              {postTags(p.tags)
+                .slice(0, 3)
+                .map((t) => (
+                  <span key={t}>{t}</span>
+                ))}
+            </div>
             <div>
               <small>
                 <CalendarDays size={12} />

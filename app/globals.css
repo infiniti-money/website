@@ -3986,6 +3986,9 @@ td > select {
   grid-template-columns: minmax(0, 1fr) 270px;
   gap: 60px;
 }
+.article-reading-layout > article {
+  min-width: 0;
+}
 .article-prose {
   font-size: 14px;
   color: #62728c;
@@ -4033,6 +4036,202 @@ td > select {
   color: var(--blue);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+.article-prose blockquote {
+  margin: 30px 0;
+  padding: 22px 26px;
+  border-left: 4px solid var(--blue, #1b57f5);
+  border-radius: 0 14px 14px 0;
+  background: #edf3ff;
+  color: #1c355c;
+}
+.article-prose blockquote p {
+  margin: 0 0 10px;
+}
+.article-prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+.article-prose figure {
+  margin: 32px 0;
+}
+.article-prose figure img {
+  display: block;
+  width: 100%;
+  max-height: 600px;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #f0f3f8;
+}
+.article-prose figcaption {
+  text-align: center;
+  margin-top: 10px;
+  color: #69778b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.article-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 26px 0;
+  border: 1px solid #dce4f2;
+  border-radius: 14px;
+}
+.article-table-scroll:focus-visible {
+  outline: 2px solid #1b57f5;
+  outline-offset: 3px;
+}
+.article-table-scroll table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.article-table-scroll th {
+  padding: 16px 20px;
+  background: #edf3ff;
+  color: #17386c;
+  text-align: left;
+  font-weight: 700;
+}
+.article-table-scroll td {
+  padding: 16px 20px;
+  vertical-align: top;
+  border-top: 1px solid #e5ebf4;
+}
+.article-table-scroll tbody tr:nth-child(even) {
+  background: #f8faff;
+}
+.article-table-scroll th:last-child,
+.article-table-scroll td:last-child {
+  white-space: nowrap;
+}
+.post-seo-fields {
+  padding: 18px;
+  background: #f7f9fe;
+  border: 1px solid #e2e8f3;
+  border-radius: 12px;
+}
+.post-seo-fields summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  color: #234d88;
+}
+.post-seo-fields label {
+  margin-top: 18px;
+}
+.post-seo-fields small {
+  color: #64748b;
+  font-size: 11px;
+}
+.article-tags,
+.card-tags,
+.admin-post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.article-tags {
+  margin: 20px 0 26px;
+}
+.article-tags a,
+.card-tags span,
+.admin-post-tags span {
+  border-radius: 6px;
+  background: #edf3ff;
+  color: #365b94;
+  padding: 5px 9px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.article-tags a:hover {
+  background: #dce8ff;
+}
+.post-card-content > .card-tags {
+  justify-content: flex-start;
+  gap: 6px;
+  margin: 14px 0 0;
+}
+.card-tags span {
+  font-size: 10px;
+  padding: 3px 7px;
+}
+.admin-post-tags {
+  max-width: 250px;
+  margin-top: 8px;
+}
+.admin-post-tags span {
+  font-size: 10px;
+}
+.article-search-form {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.6fr) 1fr 1fr auto;
+  align-items: end;
+  gap: 14px;
+  padding: 24px;
+  background: #f5f8ff;
+  border: 1px solid #e2e9f5;
+  border-radius: 16px;
+}
+.article-search-form label {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #455b79;
+}
+.article-search-form input,
+.article-search-form select {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  font-size: 12px;
+  border: 1px solid #d9e2f1;
+  border-radius: 8px;
+  background: white;
+  color: #1f3558;
+}
+.article-results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24px 0;
+  font-size: 13px;
+  color: #61748f;
+}
+.article-results a {
+  color: #2358b8;
+}
+.article-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 30px 0;
+  font-size: 13px;
+  color: #60708a;
+}
+.article-cover {
+  object-position: center 68%;
+}
+@media (max-width: 900px) {
+  .article-search-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .article-search-form {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+  .article-tags {
+    gap: 5px;
+  }
+  .article-tags a {
+    font-size: 10px;
+  }
 }
 .article-toc > div {
   position: sticky;

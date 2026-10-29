@@ -4,13 +4,18 @@ import { publicPosts } from "@/lib/articles";
 import { walletAvailability } from "@/lib/wallet-server";
 export const dynamic = "force-dynamic";
 export default async function Home() {
-  const [products, settings,posts,wallets] = await Promise.all([catalog(), shopSettings(),publicPosts(3),walletAvailability()]);
+  const [products, settings, posts, wallets] = await Promise.all([
+    catalog(),
+    shopSettings(),
+    publicPosts(3, true),
+    walletAvailability(),
+  ]);
   return (
     <Storefront
       products={products}
       settings={settings}
-      connected={{...integrations(),...wallets}}
-      posts={posts.map(({body,...summary})=>summary)}
+      connected={{ ...integrations(), ...wallets }}
+      posts={posts}
     />
   );
 }

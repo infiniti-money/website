@@ -1,6 +1,9 @@
 import { Fragment, type ReactNode } from "react";
-function safeLink(url: string) {
+
+function safeLink(url: string, image = false) {
+  if (/[\\\u0000-\u0020]/.test(url)) return false;
   if (url.startsWith("/") && !url.startsWith("//")) return true;
+  if (!image && /^tel:\+?[0-9]{8,15}$/.test(url)) return true;
   try {
     const u = new URL(url);
     return u.protocol === "https:" && !u.username && !u.password;
@@ -10,11 +13,13 @@ function safeLink(url: string) {
 }
 function inline(text: string): ReactNode[] {
   return text
-    .split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g)
+    .split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g)
     .filter(Boolean)
     .map((part, i) => {
       if (part.startsWith("**") && part.endsWith("**"))
-        return <strong key={i}>{part.slice(2, -2)}</strong>;
+        return <strong key={i}>{inline(part.slice(2, -2))}</strong>;
+      if (part.startsWith("*") && part.endsWith("*"))
+        return <em key={i}>{inline(part.slice(1, -1))}</em>;
       const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
       if (link && safeLink(link[2]))
         return (
@@ -31,11 +36,38 @@ function inline(text: string): ReactNode[] {
       return <Fragment key={i}>{part}</Fragment>;
     });
 }
+function cells(line: string) {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((c) => c.trim());
+}
+function isTable(lines: string[], index: number) {
+  const header = lines[index]?.trim() || "",
+    divider = lines[index + 1]?.trim() || "";
+  return (
+    header.startsWith("|") &&
+    header.endsWith("|") &&
+    divider.startsWith("|") &&
+    cells(header).length === cells(divider).length &&
+    cells(divider).every((c) => /^:?-{3,}:?$/.test(c))
+  );
+}
+function isBlock(lines: string[], index: number) {
+  return (
+    /^(#{2,3}\s|[-*] |\d+\. |>|!\[)/.test(lines[index].trim()) ||
+    isTable(lines, index)
+  );
+}
 export function articleHeadings(body: string) {
   return body
     .split("\n")
     .flatMap((line, index) =>
-      /^## /.test(line) ? [{ id: `muc-${index}`, title: line.slice(3) }] : [],
+      /^## /.test(line.trim())
+        ? [{ id: `muc-${index}`, title: line.trim().slice(3) }]
+        : [],
     );
 }
 export default function ArticleContent({ body }: { body: string }) {
@@ -65,6 +97,72 @@ export default function ArticleContent({ body }: { body: string }) {
       i++;
       continue;
     }
+    if (isTable(lines, i)) {
+      const header = cells(line),
+        rows: string[][] = [];
+      i += 2;
+      while (i < lines.length && lines[i].trim().startsWith("|")) {
+        rows.push(cells(lines[i]));
+        i++;
+      }
+      blocks.push(
+        <div
+          className="article-table-scroll"
+          role="region"
+          aria-label="Bảng thông tin dịch vụ"
+          tabIndex={0}
+          key={index}
+        >
+          <table>
+            <thead>
+              <tr>
+                {header.map((c, j) => (
+                  <th scope="col" key={j}>
+                    {inline(c)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, j) => (
+                <tr key={j}>
+                  {header.map((_, k) => (
+                    <td key={k}>{inline(row[k] || "")}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
+    if (line.startsWith(">")) {
+      const quote: ReactNode[] = [];
+      while (i < lines.length && lines[i].trim().startsWith(">")) {
+        quote.push(
+          <p key={i}>{inline(lines[i].trim().replace(/^>\s?/, ""))}</p>,
+        );
+        i++;
+      }
+      blocks.push(<blockquote key={index}>{quote}</blockquote>);
+      continue;
+    }
+    if (line.startsWith("![")) {
+      const img = line.match(/^!\[([^\]]*)\]\(([^\s)]+)\)$/);
+      blocks.push(
+        img && safeLink(img[2], true) ? (
+          <figure key={i}>
+            <img src={img[2]} alt={img[1]} loading="lazy" decoding="async" />
+            <figcaption>{img[1]}</figcaption>
+          </figure>
+        ) : (
+          <p key={i}>{line}</p>
+        ),
+      );
+      i++;
+      continue;
+    }
     if (/^[-*] /.test(line) || /^\d+\. /.test(line)) {
       const ordered = /^\d+\. /.test(line),
         items: ReactNode[] = [];
@@ -86,12 +184,9 @@ export default function ArticleContent({ body }: { body: string }) {
       );
       continue;
     }
-    const paragraph: string[] = [];
-    while (
-      i < lines.length &&
-      lines[i].trim() &&
-      !/^(#{2,3}\s|[-*] |\d+\. )/.test(lines[i].trim())
-    ) {
+    const paragraph = [line];
+    i++;
+    while (i < lines.length && lines[i].trim() && !isBlock(lines, i)) {
       paragraph.push(lines[i].trim());
       i++;
     }

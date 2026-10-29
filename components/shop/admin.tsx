@@ -72,8 +72,14 @@ const providerInfo: Record<
     docs: "https://docs.haravan.com/docs/get-started/overview/",
   },
 };
-export default function Admin() {
-  const [tab, setTab] = useState("overview"),
+export default function Admin({
+  initialTab = "overview",
+}: {
+  initialTab?: string;
+}) {
+  const [tab, setTab] = useState(
+      tabs.some((t) => t[0] === initialTab) ? initialTab : "overview",
+    ),
     [data, setData] = useState<any>(null),
     [error, setError] = useState(""),
     [query, setQuery] = useState(""),
@@ -92,6 +98,18 @@ export default function Admin() {
   }
   useEffect(() => {
     load();
+    function restoreTab() {
+      const selected =
+        window.location.pathname === "/admin/bai-viet"
+          ? "posts"
+          : new URLSearchParams(window.location.search).get("tab") ||
+            "overview";
+      setTab(tabs.some((t) => t[0] === selected) ? selected : "overview");
+      setSidebar(false);
+      setQuery("");
+    }
+    window.addEventListener("popstate", restoreTab);
+    return () => window.removeEventListener("popstate", restoreTab);
   }, []);
   async function action(path: string, body: any, method = "POST") {
     setBusy(true);
@@ -110,6 +128,14 @@ export default function Admin() {
     data?.orders.filter((o: any) => o.payment_status === "paid") || [];
   const revenue = paid.reduce((n: number, o: any) => n + o.total, 0);
   function changeTab(t: string) {
+    const path =
+      t === "posts"
+        ? "/admin/bai-viet"
+        : t === "overview"
+          ? "/admin"
+          : `/admin?tab=${t}`;
+    if (window.location.pathname + window.location.search !== path)
+      window.history.pushState(null, "", path);
     setTab(t);
     setQuery("");
     setSidebar(false);

@@ -41,10 +41,12 @@ pnpm install
 pnpm build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_brown_micromax.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_faithful_risque.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_calm_prima.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0003_stale_rogue.sql
 pnpm dev --port 5175
 ```
 
-Chỉ chạy mỗi migration một lần theo thứ tự. Nếu cơ sở dữ liệu đã có migration 0000, chỉ áp dụng migration 0001 còn thiếu. Mở URL Local mà máy chủ in ra. File `Mo-InfinitiSeller.cmd` có thể khởi động lại bản đã cài trên Windows.
+Chỉ chạy mỗi migration một lần theo thứ tự. Với cơ sở dữ liệu hiện có, chỉ áp dụng các migration còn thiếu. Mở URL Local mà máy chủ in ra. File `Mo-InfinitiSeller.cmd` có thể khởi động lại bản đã cài trên Windows.
 
 Bản preview portable mô phỏng đăng nhập ở `/signin-with-chatgpt?return_to=/` bằng tài khoản cục bộ `seedy@sites.test`. Mô phỏng này không được đưa vào bản production.
 
@@ -92,8 +94,21 @@ Giấy phép mã nguồn: MIT. Ảnh mẫu và thương hiệu sản phẩm thu�
 - `/bai-viet` là danh sách bài đã đăng; `/bai-viet/[slug]` là trang đọc chi tiết có metadata.
 - `/gioi-thieu` dẫn tới bài giới thiệu công ty hiện đang xuất bản.
 - Quản trị → Bài viết: tạo, sửa, xem trước và chọn Bản nháp / Đã đăng / Lưu trữ. Nháp và lưu trữ không xuất hiện trong danh sách hoặc URL công khai.
-- Nội dung hỗ trợ tiêu đề `##`, danh sách, `**chữ đậm**` và liên kết HTTPS/nội bộ. HTML được hiển thị như văn bản, không thực thi.
+- Mở thẳng `/admin/bai-viet` để quản lý bài viết. Các mục quản trị giữ đường dẫn hiện tại khi chuyển mục, tải lại hoặc dùng nút quay lại.
+- Nội dung hỗ trợ tiêu đề `##`, danh sách, `**chữ đậm**`, `*in nghiêng*`, liên kết HTTPS/nội bộ/`tel:`, ảnh Markdown, khung ghi chú `>` và bảng Markdown. HTML được hiển thị như văn bản, không thực thi. Bảng cuộn ngang trong khung khi dùng điện thoại.
+- Mỗi bài có Meta Title và Meta Description riêng trong mục SEO của trình soạn thảo. Nếu để trống, trang dùng tiêu đề và mô tả ngắn của bài. Metadata có canonical và ảnh Open Graph.
 - Bài giới thiệu đã soạn được khởi tạo ngoài migration bằng thao tác INSERT OR IGNORE; các lần triển khai sau không ghi đè nội dung người dùng sửa.
+- Bài dịch vụ tại nhà ở `/bai-viet/sua-may-tinh-laptop-may-in-lap-mang-camera-tai-nha` được khởi tạo theo cùng cách, gồm nội dung chủ cửa hàng cung cấp, bảng giá, hotline/Zalo và ảnh minh họa có ghi nguồn trong [tài liệu ảnh](docs/article-images.md).
+
+## Bộ bài địa phương và SEO
+
+- Có 220 bài địa phương trong địa bàn Hưng Yên cũ: 39 xã/phường tại mốc 1/7/2025, 139 đơn vị ngay trước mốc này, 32 tên trước tháng 12/2024 và 10 huyện/thị xã/thành phố cũ. Không gồm Thái Bình cũ. Dữ liệu và các trường hợp chia một phần địa bàn được ghi tại [nguồn đối chiếu](docs/hung-yen-sources.md).
+- Mỗi bài tổng hợp sáu nhóm dịch vụ, có đoạn địa danh riêng, liên kết tên cũ–mới, tag, tiêu đề/mô tả SEO, canonical, Open Graph/Twitter và JSON-LD BlogPosting/BreadcrumbList. Không tạo chi nhánh, đánh giá hoặc tư cách đại lý nhà mạng giả.
+- Trang bài viết hỗ trợ tìm không dấu, lọc tên cũ/mới, tag và phân trang 12 bài. Quản trị phân trang 20 bài, chỉ tải nội dung đầy đủ khi mở bài để sửa; danh sách không gửi toàn bộ văn bản của hàng trăm bài xuống điện thoại.
+- Các bài khởi tạo có ID ổn định, INSERT OR IGNORE theo lô 25; cờ `editorial-regions-v1` đánh dấu hoàn tất. Không ghi đè chỉnh sửa/trạng thái người quản trị ở các lần xem hoặc triển khai sau.
+- `/sitemap.xml` chỉ chứa trang và bài đang xuất bản. `/robots.txt` khai báo sitemap và loại khu vực quản trị/API; quản trị vẫn được bảo vệ bằng đăng nhập, không phụ thuộc robots. Kết quả tìm kiếm có noindex để giảm trang trùng lặp.
+- Website đang riêng tư sẽ không được Google thu thập. Chỉ mở công khai khi chủ sở hữu xác nhận; sau đó cần xác minh tài sản Search Console và gửi sitemap bằng tài khoản của chủ sở hữu. Sitemap, tag hoặc metadata không bảo đảm Google lập chỉ mục hay thứ hạng.
+- Kiểm tra thêm: `node scripts/verify-service-article.mjs http://127.0.0.1:5175` và `node scripts/verify-regional-seo.mjs http://127.0.0.1:5175`.
 
 ## Liên kết ZaloPay, MoMo và Viettel Money
 

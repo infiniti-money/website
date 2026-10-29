@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/client";
-import type { Post } from "@/lib/articles";
+import type { Post, PostSummary } from "@/lib/articles";
+import { postTags, normalizeSearch } from "@/lib/post-meta";
 import Dialog from "./dialog";
 import ArticleContent from "./article-content";
 const labels = {
@@ -24,20 +25,35 @@ export default function PostsManager({
   assets,
   reload,
 }: {
-  posts: Post[];
+  posts: PostSummary[];
   assets: any[];
   reload: () => Promise<void>;
 }) {
   const [edit, setEdit] = useState<Partial<Post> | null>(null),
     [query, setQuery] = useState(""),
-    [filter, setFilter] = useState("all");
+    [filter, setFilter] = useState("all"),
+    [page, setPage] = useState(1),
+    [opening, setOpening] = useState(false);
   const visible = posts.filter(
     (p) =>
       (filter === "all" || p.status === filter) &&
-      (p.title + p.category)
-        .toLocaleLowerCase("vi")
-        .includes(query.toLocaleLowerCase("vi")),
+      normalizeSearch(p.title + p.category + p.excerpt + p.tags).includes(
+        normalizeSearch(query),
+      ),
   );
+  const pages = Math.max(1, Math.ceil(visible.length / 20)),
+    currentPage = Math.min(page, pages),
+    rows = visible.slice((currentPage - 1) * 20, currentPage * 20);
+  async function openPost(id: string) {
+    setOpening(true);
+    try {
+      setEdit((await api(`admin/posts/${id}`)).post);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setOpening(false);
+    }
+  }
   return (
     <>
       <div className="admin-toolbar">
@@ -47,7 +63,10 @@ export default function PostsManager({
             aria-label="Tìm bài viết"
             placeholder="Tìm bài viết, chuyên mục..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setPage(1);
+            }}
           />
         </div>
         <button
@@ -69,7 +88,10 @@ export default function PostsManager({
           <button
             key={id}
             className={filter === id ? "active" : ""}
-            onClick={() => setFilter(id)}
+            onClick={() => {
+              setFilter(id);
+              setPage(1);
+            }}
           >
             {id === "all" ? "Tất cả" : labels[id as keyof typeof labels]}{" "}
             <span>
@@ -92,7 +114,7 @@ export default function PostsManager({
             </tr>
           </thead>
           <tbody>
-            {visible.map((p) => (
+            {rows.map((p) => (
               <tr key={p.id}>
                 <td>
                   <div className="table-product">
@@ -107,7 +129,16 @@ export default function PostsManager({
                     </span>
                   </div>
                 </td>
-                <td>{p.category}</td>
+                <td>
+                  {p.category}
+                  <div className="admin-post-tags">
+                    {postTags(p.tags)
+                      .slice(0, 3)
+                      .map((t) => (
+                        <span key={t}>#{t}</span>
+                      ))}
+                  </div>
+                </td>
                 <td>
                   <span
                     className={`status ${p.status === "published" ? "completed" : p.status === "draft" ? "pending" : "cancelled"}`}
@@ -120,7 +151,8 @@ export default function PostsManager({
                   <div className="table-row-actions">
                     <button
                       className="icon-button"
-                      onClick={() => setEdit(p)}
+                      disabled={opening}
+                      onClick={() => openPost(p.id)}
                       aria-label={`Sửa bài ${p.title}`}
                     >
                       <Pencil size={15} />
@@ -149,6 +181,28 @@ export default function PostsManager({
           </div>
         )}
       </div>
+      <nav
+        className="article-pagination"
+        aria-label="Phân trang quản lý bài viết"
+      >
+        <button
+          className="btn btn-outline small"
+          disabled={currentPage === 1}
+          onClick={() => setPage(currentPage - 1)}
+        >
+          Trang trước
+        </button>
+        <span>
+          {visible.length} bài · Trang {currentPage}/{pages}
+        </span>
+        <button
+          className="btn btn-outline small"
+          disabled={currentPage === pages}
+          onClick={() => setPage(currentPage + 1)}
+        >
+          Trang tiếp
+        </button>
+      </nav>
       {edit && (
         <PostEditor
           post={edit}
@@ -189,6 +243,10 @@ function PostEditor({
       title: post.title || "",
       slug: post.slug || "",
       excerpt: post.excerpt || "",
+      tags: postTags(post.tags).join(", "),
+      area_key: post.area_key || "",
+      seo_title: post.seo_title || "",
+      seo_description: post.seo_description || "",
       body: post.body || "",
       cover_image: post.cover_image || "",
       category: post.category || "",
@@ -215,7 +273,17 @@ function PostEditor({
           try {
             await api(
               post.id ? `admin/posts/${post.id}` : "admin/posts",
-              value,
+              {
+                ...value,
+                tags: [
+                  ...new Set(
+                    value.tags
+                      .split(",")
+                      .map((t) => t.trim())
+                      .filter(Boolean),
+                  ),
+                ],
+              },
               post.id ? "PATCH" : "POST",
             );
             toast.success(
@@ -294,6 +362,42 @@ function PostEditor({
             />
           </label>
         </div>
+        <details className="post-seo-fields">
+          <summary>Tối ưu tìm kiếm (SEO)</summary>
+          <label>
+            Meta Title
+            <input
+              value={value.seo_title}
+              maxLength={180}
+              placeholder="Để trống để dùng tiêu đề bài viết"
+              onChange={(e) => set("seo_title", e.target.value)}
+            />
+            <small>{value.seo_title.length}/180 ký tự</small>
+          </label>
+          <label>
+            Meta Description
+            <textarea
+              value={value.seo_description}
+              maxLength={400}
+              rows={3}
+              placeholder="Để trống để dùng mô tả ngắn"
+              onChange={(e) => set("seo_description", e.target.value)}
+            />
+            <small>{value.seo_description.length}/400 ký tự</small>
+          </label>
+        </details>
+        <label>
+          Tag bài viết
+          <input
+            value={value.tags}
+            maxLength={1200}
+            onChange={(e) => set("tags", e.target.value)}
+            placeholder="Sửa máy tính, Yên Mỹ, Hưng Yên cũ"
+          />
+          <small>
+            Phân cách bằng dấu phẩy. Tối đa 20 tag, mỗi tag 80 ký tự.
+          </small>
+        </label>
         <label>
           Ảnh bìa (URL HTTPS hoặc ảnh thư viện)
           <input
@@ -346,8 +450,9 @@ function PostEditor({
               onChange={(e) => set("body", e.target.value)}
             />
             <small>
-              Dùng ## cho tiêu đề, - cho danh sách, **chữ đậm** và [nội
-              dung](https://...). HTML được hiển thị như văn bản.
+              Dùng ## cho tiêu đề, - cho danh sách, **chữ đậm**, [liên
+              kết](https://...), ![mô tả ảnh](URL), &gt; cho khung ghi chú và
+              bảng Markdown. HTML được hiển thị như văn bản.
             </small>
           </label>
         )}

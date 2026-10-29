@@ -5,7 +5,11 @@ const image = z
   .string()
   .max(2000)
   .refine(
-    (s) => !s || s.startsWith("/api/media/") || /^https:\/\//.test(s),
+    (s) =>
+      !s ||
+      s.startsWith("/api/media/") ||
+      s.startsWith("/images/") ||
+      /^https:\/\//.test(s),
     "Ảnh cần URL HTTPS hoặc ảnh thư viện.",
   );
 const postInput = z.object({
@@ -20,6 +24,14 @@ const postInput = z.object({
       "Đường dẫn chỉ dùng chữ thường không dấu, số và dấu gạch ngang.",
     ),
   excerpt: z.string().trim().min(20).max(400),
+  seo_title: z.string().trim().max(180).default(""),
+  seo_description: z.string().trim().max(400).default(""),
+  tags: z.array(z.string().trim().min(1).max(80)).max(20).default([]),
+  area_key: z
+    .string()
+    .max(180)
+    .regex(/^[a-z0-9-]*$/)
+    .default(""),
   cover_image: image,
   body: z.string().trim().min(100).max(60000),
   category: z.string().trim().min(2).max(60),
@@ -37,6 +49,14 @@ export async function managementApi(
   path: string[],
 ): Promise<Response | null> {
   const p = path.join("/");
+  if (req.method === "GET" && path[1] === "posts" && path.length === 3) {
+    const post = await db()
+      .prepare("SELECT * FROM posts WHERE id=?")
+      .bind(path[2])
+      .first();
+    if (!post) throw new HttpError(404, "Không tìm thấy bài viết.");
+    return Response.json({ post });
+  }
   if (
     (req.method === "POST" || req.method === "PATCH") &&
     path[1] === "posts"
@@ -54,7 +74,7 @@ export async function managementApi(
     if (req.method === "POST")
       await db()
         .prepare(
-          "INSERT INTO posts (id,slug,title,excerpt,cover_image,body,category,author,status,published_at,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+          "INSERT INTO posts (id,slug,title,excerpt,cover_image,body,category,author,status,published_at,created_at,updated_at,seo_title,seo_description,tags,area_key) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         )
         .bind(
           id,
@@ -69,12 +89,16 @@ export async function managementApi(
           b.status === "published" ? date : null,
           date,
           date,
+          b.seo_title,
+          b.seo_description,
+          JSON.stringify([...new Set(b.tags)]),
+          b.area_key,
         )
         .run();
     else {
       const result = await db()
         .prepare(
-          "UPDATE posts SET slug=?,title=?,excerpt=?,cover_image=?,body=?,category=?,author=?,status=?,published_at=CASE WHEN ?='published' THEN COALESCE(published_at,?) ELSE published_at END,updated_at=? WHERE id=?",
+          "UPDATE posts SET slug=?,title=?,excerpt=?,cover_image=?,body=?,category=?,author=?,status=?,published_at=CASE WHEN ?='published' THEN COALESCE(published_at,?) ELSE published_at END,updated_at=?,seo_title=?,seo_description=?,tags=?,area_key=? WHERE id=?",
         )
         .bind(
           b.slug,
@@ -88,6 +112,10 @@ export async function managementApi(
           b.status,
           date,
           date,
+          b.seo_title,
+          b.seo_description,
+          JSON.stringify([...new Set(b.tags)]),
+          b.area_key,
           id,
         )
         .run();
