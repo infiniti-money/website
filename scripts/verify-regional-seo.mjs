@@ -24,13 +24,13 @@ async function get(path) {
 }
 const admin = await (await get("/api/admin/data")).json(),
   regional = admin.posts.filter((p) => p.area_key && p.status === "published");
-assert.equal(regional.length, 210, "39 current, 148 distinct historic locality names and 23 Ecopark");
+assert.equal(regional.length, 220, "39 current + 148 historical + 10 district + 23 Ecopark");
 const communes = regional.filter((p) => p.area_key.startsWith("moi-"));
 assert.equal(communes.length, 39);
 assert.equal(communes.filter((p) => p.title.includes("xã ")).length, 33);
 assert.equal(communes.filter((p) => p.title.includes("phường ")).length, 6);
-assert.equal(regional.filter((p) => p.area_key.startsWith("cu-")).length, 116);\nassert.equal(regional.filter((p) => p.area_key.startsWith("truoc-2024-")).length, 32);
-assert(regional.every((p) => ["moi-","cu-","truoc-2024-","ecopark-"].some((prefix) => p.area_key.startsWith(prefix))));
+assert.equal(regional.filter((p) => p.area_key.startsWith("cu-")).length, 116);\nassert.equal(regional.filter((p) => p.area_key.startsWith("truoc-2024-")).length, 32);\nassert.equal(regional.filter((p) => p.area_key.startsWith("huyen-")).length, 10);
+assert(regional.every((p) => ["moi-","cu-","truoc-2024-","huyen-","ecopark-"].some((prefix) => p.area_key.startsWith(prefix))));
 const ecopark = regional.filter((p) => p.area_key.startsWith("ecopark-"));
 assert.equal(ecopark.length, 23, "23 Ecopark location articles");
 assert.equal(new Set(ecopark.map((p) => p.slug)).size, 23);
