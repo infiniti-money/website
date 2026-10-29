@@ -88,6 +88,10 @@ export function integrations() {
       e.CLOUDINARY_API_SECRET
     ),
     haravan: !!e.HARAVAN_ACCESS_TOKEN,
+    viettelpost: !!(e.VIETTELPOST_USERNAME && e.VIETTELPOST_PASSWORD),
+    ghn: !!(e.GHN_TOKEN && e.GHN_SHOP_ID),
+    ghtk: !!e.GHTK_TOKEN,
+    jnt: !!(e.JNT_CUSTOMER_CODE && e.JNT_API_KEY),
     r2: !!env.BUCKET,
   };
 }
