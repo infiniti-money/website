@@ -104,7 +104,7 @@ async function publishMissingHistoricCommunes() {
   if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
     return;
   const date = now();
-  const historic = regionalArticles().filter((p) => p.area_key.startsWith("cu-"));
+  const historic = regionalArticles().filter((p) => p.area_key.startsWith("cu-") || p.area_key.startsWith("truoc-2024-"));
   for (let start = 0; start < historic.length; start += 20) {
     await db().batch(historic.slice(start, start + 20).flatMap((p) => [
       db().prepare(
