@@ -41,7 +41,22 @@ async function refreshUneditedRegionalArticles() {
   await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)")
     .bind(marker, now()).run();
 }
+async function archiveDuplicateRegionalArticles() {
+  const marker = "regional-dedup-v3";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  const keep = new Set(regionalArticles().map((post) => post.area_key));
+  const existing = (await db().prepare("SELECT area_key FROM posts WHERE area_key != ''").all<{ area_key: string }>()).results;
+  const duplicates = existing.filter((post) => !keep.has(post.area_key));
+  for (let start = 0; start < duplicates.length; start += 25)
+    await db().batch(duplicates.slice(start, start + 25).map((post) =>
+      db().prepare("UPDATE posts SET status='archived' WHERE area_key=? AND status='published'")
+        .bind(post.area_key),
+    ));
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker, now()).run();
+}
 export async function seedCompanyArticle() {
+  await archiveDuplicateRegionalArticles();
   await refreshUneditedRegionalArticles();
   const marker = "editorial-regions-v1";
   if (
