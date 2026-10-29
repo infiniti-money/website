@@ -139,7 +139,7 @@ export function regionalArticles() {
     cover_image: area.group.startsWith("Xã/phường mới")
       ? "/images/lap-dat-mang-tai-nha.jpg"
       : "/images/sua-may-tinh-tai-nha.jpg",
-    category: "Dịch vụ Hưng Yên",
+    category: "Dịch vụ tại Hưng Yên",
     author: "Infiniti Seller",
     body: `Bạn cần sửa máy tính không lên nguồn, laptop chạy chậm, máy in không nhận lệnh; lắp đặt camera, cải thiện mạng Wi-Fi hoặc kiểm tra kết nối truyền hình tại **${area.label}**? Infiniti Seller tiếp nhận thông tin thiết bị và địa chỉ để tư vấn phương án, xác nhận lịch hỗ trợ phù hợp.
 
