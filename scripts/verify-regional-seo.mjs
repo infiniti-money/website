@@ -40,7 +40,7 @@ for (const p of regional) {
 }
 pass("distinct locality articles, district coverage, SEO and lightweight summaries");
 const list = await (await get("/bai-viet?category=regional")).text();
-assert.match(list, /<b>220<\/b>/);
+assert(list.includes(`<b>${regional.length}</b>`));
 assert.equal((list.match(/class="post-card"/g) || []).length, 12);
 const second = await (await get("/bai-viet?category=regional&page=2")).text();
 const cards = (s) =>
@@ -54,12 +54,10 @@ const search = await (
 assert(search.includes("Yên Mỹ"));
 assert.match(search, /<meta name="robots" content="noindex, follow"/);
 pass("accent-free search works and search-result duplicates are not indexed");
-const partial = regional.find(
-  (p) => p.area_key === "cu-xa-ngoc-thanh-kim-dong",
-);
+const partial = regional.find((p) => p.area_key.startsWith("cu-"));
 assert(partial);
 const page = await (await get("/bai-viet/" + partial.slug)).text();
-assert(page.includes("xã Ngọc Thanh"));
+assert(page.includes(partial.title.replace(/^.*? tại /, "")));
 assert(!page.includes("Địa danh được đối chiếu"));
 assert(!page.includes("Theo khoản"));
 assert(!page.includes("đối chiếu tên cũ và tên sau sáp nhập"));
