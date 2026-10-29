@@ -15,6 +15,10 @@ import {
   HttpError,
 } from "@/lib/server";
 import { createPayment, verify } from "@/lib/payos";
+import { allPosts, publicPosts } from "@/lib/articles";
+import { walletSettings, walletAvailability } from "@/lib/wallet-server";
+import { isWalletId, validWalletUrl } from "@/lib/payment-links";
+import { managementApi } from "@/lib/management-api";
 import type { Product } from "@/lib/catalog";
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ path: string[] }> };
@@ -48,10 +52,13 @@ async function handler(req: Request, ctx: Ctx) {
       p = path.join("/"),
       method = req.method;
     if (method !== "GET" && p !== "webhooks/payos") sameOrigin(req);
+    if (method === "GET" && p === "posts")
+      return Response.json({ posts: await publicPosts() });
     if (method === "GET" && p === "catalog")
       return Response.json({
         products: await catalog(),
         settings: await shopSettings(),
+        wallets: await walletAvailability(),
         integrations: integrations(),
       });
     if (method === "GET" && p === "orders") {
@@ -98,7 +105,7 @@ async function handler(req: Request, ctx: Ctx) {
             )
             .min(1)
             .max(50),
-          method: z.enum(["cod", "payos"]),
+          method: z.enum(["cod", "payos", "zalopay", "momo", "viettelmoney"]),
           requestId: z.string().uuid(),
         })
         .parse(await jsonBody(req));
@@ -124,6 +131,18 @@ async function handler(req: Request, ctx: Ctx) {
         throw new HttpError(
           503,
           "payOS chưa được cấu hình. Hãy chọn thanh toán khi nhận hàng.",
+        );
+      const selectedWallet = isWalletId(b.method)
+        ? (await walletSettings())[b.method]
+        : null;
+      if (
+        selectedWallet &&
+        (!selectedWallet.enabled ||
+          !validWalletUrl(b.method as any, selectedWallet.url))
+      )
+        throw new HttpError(
+          503,
+          "Phương thức ví điện tử chưa được cửa hàng cấu hình.",
         );
       const ids = [...new Set(b.items.map((i) => i.id))],
         rows = (
@@ -162,7 +181,7 @@ async function handler(req: Request, ctx: Ctx) {
           (crypto.getRandomValues(new Uint16Array(1))[0] % 1000);
       await db()
         .prepare(
-          "INSERT INTO orders (id,user_id,request_key,code,customer,items,subtotal,shipping,total,method,status,payment_status,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+          "INSERT INTO orders (id,user_id,request_key,code,customer,items,subtotal,shipping,total,method,status,payment_status,created_at,payment_url,payment_details) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         )
         .bind(
           id,
@@ -178,6 +197,16 @@ async function handler(req: Request, ctx: Ctx) {
           "pending",
           "unpaid",
           now(),
+          selectedWallet?.url || null,
+          JSON.stringify(
+            selectedWallet
+              ? {
+                  provider: b.method,
+                  recipient: selectedWallet.recipient,
+                  instructions: selectedWallet.instructions,
+                }
+              : {},
+          ),
         )
         .run();
       if (b.method === "payos")
@@ -299,6 +328,8 @@ async function handler(req: Request, ctx: Ctx) {
     }
     if (p.startsWith("admin/")) {
       await admin();
+      const managed = await managementApi(req, path);
+      if (managed) return managed;
       if (method === "GET" && p === "admin/data") {
         const [products, orders, bookings, assets, external] =
           await Promise.all([
@@ -330,6 +361,8 @@ async function handler(req: Request, ctx: Ctx) {
           bookings: bookings.results,
           assets: assets.results,
           externalOrders: external.results,
+          posts: await allPosts(),
+          payments: await walletSettings(),
           settings: await shopSettings(),
           integrations: integrations(),
         });
@@ -393,7 +426,11 @@ async function handler(req: Request, ctx: Ctx) {
           current = await db()
             .prepare("SELECT * FROM orders WHERE id=?")
             .bind(path[2])
-            .first<{ status: string; payment_status: string }>();
+            .first<{
+              status: string;
+              payment_status: string;
+              method: string;
+            }>();
         if (!current) throw new HttpError(404, "Không tìm thấy đơn.");
         const transitions: Record<string, string[]> = {
           pending: ["processing", "cancelled"],
@@ -409,12 +446,26 @@ async function handler(req: Request, ctx: Ctx) {
             409,
             "Đơn đã thanh toán: xử lý hoàn tiền trước khi hủy.",
           );
-        await db()
+        if (
+          isWalletId(current.method) &&
+          ["shipped", "completed"].includes(b.status) &&
+          current.payment_status !== "paid"
+        )
+          throw new HttpError(
+            409,
+            "Cần đối soát thanh toán ví trước khi giao hoặc hoàn thành đơn.",
+          );
+        const result = await db()
           .prepare(
-            "UPDATE orders SET status=?,payment_status=CASE WHEN method='cod' AND ?='completed' THEN 'paid' ELSE payment_status END WHERE id=? AND status=?",
+            "UPDATE orders SET status=?,payment_status=CASE WHEN method='cod' AND ?='completed' THEN 'paid' ELSE payment_status END WHERE id=? AND status=? AND (?!='cancelled' OR payment_status!='paid')",
           )
-          .bind(b.status, b.status, path[2], current.status)
+          .bind(b.status, b.status, path[2], current.status, b.status)
           .run();
+        if (!result.meta.changes)
+          throw new HttpError(
+            409,
+            "Trạng thái đơn vừa thay đổi. Vui lòng tải lại.",
+          );
         return Response.json({ success: true });
       }
       if (method === "PATCH" && path[1] === "bookings") {

@@ -19,18 +19,26 @@ import {
   ExternalLink,
   Download,
   Menu,
+  BookOpen,
+  WalletCards,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { money, categories, services, type Product } from "@/lib/catalog";
 import { api, statusLabels } from "@/lib/client";
 import Dialog from "./dialog";
 import MediaUploader from "./media-uploader";
+import PostsManager from "./posts-manager";
+import PaymentSettings from "./payment-settings";
+import VerifyPayment from "./verify-payment";
+import { isWalletId, paymentMethodName } from "@/lib/payment-links";
 const tabs = [
   ["overview", "Tổng quan", LayoutDashboard],
   ["products", "Sản phẩm", Package],
   ["orders", "Đơn hàng", ShoppingBag],
   ["bookings", "Lịch kỹ thuật", CalendarDays],
   ["media", "Thư viện ảnh", Images],
+  ["posts", "Bài viết", BookOpen],
+  ["payments", "Thanh toán", WalletCards],
   ["integrations", "Kết nối dịch vụ", Plug],
   ["settings", "Cài đặt cửa hàng", Settings],
 ] as const;
@@ -73,6 +81,7 @@ export default function Admin() {
     [provider, setProvider] = useState<string | null>(null),
     [busy, setBusy] = useState(false),
     [sidebar, setSidebar] = useState(false);
+  const [verifyOrder, setVerifyOrder] = useState<any>(null);
   async function load() {
     try {
       setData(await api("admin/data"));
@@ -252,6 +261,7 @@ export default function Admin() {
                         orders={data.orders.slice(0, 5)}
                         onAction={action}
                         busy={busy}
+                        onVerify={setVerifyOrder}
                       />
                     </section>
                     <section className="admin-panel quick-panel">
@@ -418,6 +428,7 @@ export default function Admin() {
                       orders={data.orders}
                       onAction={action}
                       busy={busy}
+                      onVerify={setVerifyOrder}
                     />
                   </div>
                   <div className="admin-panel">
@@ -577,6 +588,16 @@ export default function Admin() {
                   </p>
                 </>
               )}
+              {tab === "posts" && (
+                <PostsManager
+                  posts={data.posts || []}
+                  assets={data.assets || []}
+                  reload={load}
+                />
+              )}
+              {tab === "payments" && (
+                <PaymentSettings initial={data.payments} reload={load} />
+              )}
               {tab === "settings" && (
                 <SettingsForm
                   settings={data.settings}
@@ -602,6 +623,16 @@ export default function Admin() {
             );
             toast.success("Đã lưu sản phẩm");
             setEdit(null);
+            await load();
+          }}
+        />
+      )}
+      {verifyOrder && (
+        <VerifyPayment
+          order={verifyOrder}
+          close={() => setVerifyOrder(null)}
+          saved={async () => {
+            setVerifyOrder(null);
             await load();
           }}
         />
@@ -656,8 +687,10 @@ function OrderTable({
   orders,
   onAction,
   busy,
+  onVerify,
 }: {
   orders: any[];
+  onVerify: (order: any) => void;
   onAction: (p: string, b: any, m?: string) => void;
   busy: boolean;
 }) {
@@ -721,8 +754,19 @@ function OrderTable({
                       ? "Đã thanh toán"
                       : o.method === "cod"
                         ? "COD"
-                        : "Chờ payOS"}
+                        : paymentMethodName(o.method)}
                   </span>
+                  {isWalletId(o.method) &&
+                    o.payment_status !== "paid" &&
+                    o.status !== "cancelled" && (
+                      <button
+                        className="verify-payment-button"
+                        disabled={busy}
+                        onClick={() => onVerify(o)}
+                      >
+                        Xác nhận sau đối soát
+                      </button>
+                    )}
                 </td>
                 <td>
                   <span className={`status ${o.status}`}>

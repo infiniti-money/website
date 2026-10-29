@@ -47,14 +47,24 @@ import Dialog from "./dialog";
 import { api, statusLabels } from "@/lib/client";
 import BrandText from "./brand";
 import ZaloWidget from "./zalo-widget";
+import { PostCards, type PostSummary } from "./article-shell";
+import {
+  walletIds,
+  walletProviders,
+  isWalletId,
+  paymentMethodName,
+} from "@/lib/payment-links";
+import WalletPayment from "./wallet-payment";
 const categoryIcons = [Monitor, Laptop, Monitor, Camera, Printer, Headphones];
 const serviceIcons = [Laptop, Printer, Camera, Wifi];
 export default function Storefront({
   products: initial,
   settings: shop,
   connected,
+  posts = [],
 }: {
   products: Product[];
+  posts?: PostSummary[];
   settings: ShopSettings;
   connected: Record<string, boolean>;
 }) {
@@ -223,7 +233,7 @@ export default function Storefront({
               <button onClick={() => setBooking("computer")}>
                 Sửa chữa tại nhà
               </button>
-              <a href="#quy-trinh">Quy trình</a>
+              <a href="/bai-viet">Bài viết</a>
             </nav>
             <a className="admin-link" href="/admin">
               Quản trị cửa hàng <ArrowUpRight size={13} />
@@ -516,6 +526,21 @@ export default function Storefront({
             phẩm thực tế trong phần quản trị.
           </p>
         </section>
+        {posts.length > 0 && (
+          <section className="container home-posts">
+            <div className="eyebrow">KIẾN THỨC & CÂU CHUYỆN</div>
+            <div className="section-title">
+              <h2>
+                Góc chia sẻ của Infiniti Seller
+                <span className="title-dot">.</span>
+              </h2>
+              <a href="/bai-viet">
+                Tất cả bài viết <ArrowUpRight size={15} />
+              </a>
+            </div>
+            <PostCards posts={posts} />
+          </section>
+        )}
         <section className="services-section" id="dich-vu">
           <div className="container">
             <div className="section-title">
@@ -627,6 +652,8 @@ export default function Storefront({
           </div>
           <div>
             <h4>Khám phá</h4>
+            <a href="/bai-viet">Bài viết & kiến thức</a>
+            <a href="/gioi-thieu">Giới thiệu Infiniti Seller</a>
             <a href="#san-pham">Tất cả sản phẩm</a>
             <a href="#dich-vu">Dịch vụ kỹ thuật</a>
             <button onClick={() => setOrdersOpen(true)}>
@@ -805,7 +832,7 @@ function CartDialog({
         method: f.get("method"),
       });
       clear();
-      if (data.order.payment_url) {
+      if (data.order.method === "payos" && data.order.payment_url) {
         location.assign(data.order.payment_url);
         return;
       }
@@ -960,6 +987,27 @@ function CartDialog({
                     </small>
                   </span>
                 </label>
+                {walletIds.map((id) => (
+                  <label
+                    key={id}
+                    className={`radio-card ${!connected[id] ? "disabled" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="method"
+                      value={id}
+                      disabled={!connected[id]}
+                    />
+                    <span>
+                      {walletProviders[id].name}
+                      <small>
+                        {connected[id]
+                          ? "Mở liên kết nhận tiền; cửa hàng đối soát và xác nhận."
+                          : "Chưa được cửa hàng kích hoạt."}
+                      </small>
+                    </span>
+                  </label>
+                ))}
               </fieldset>
               {error && <AuthError error={error} />}
               <button disabled={busy} className="btn btn-blue full">
@@ -1170,11 +1218,13 @@ function OrdersDialog({ close }: { close: () => void }) {
                 ? "Đã thanh toán"
                 : o.method === "cod"
                   ? "Thanh toán khi nhận hàng"
-                  : "Chưa thanh toán"}
+                  : `${paymentMethodName(o.method)} · Chờ đối soát`}
             </span>
             <strong>{money(o.total)}</strong>
           </footer>
-          {o.payment_url &&
+          <WalletPayment order={o} />
+          {o.method === "payos" &&
+            o.payment_url &&
             o.payment_status !== "paid" &&
             o.status !== "cancelled" && (
               <a className="btn btn-blue small" href={o.payment_url}>

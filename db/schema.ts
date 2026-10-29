@@ -31,6 +31,7 @@ export const orders = sqliteTable("orders", {
   status: text("status").notNull().default("pending"),
   payment_status: text("payment_status").notNull().default("unpaid"),
   payment_url: text("payment_url"),
+  payment_details: text("payment_details").notNull().default("{}"),
   created_at: text("created_at").notNull(),
 });
 export const bookings = sqliteTable("bookings", {
@@ -56,4 +57,18 @@ export const externalOrders = sqliteTable("external_orders", {
   id: text("id").primaryKey(),
   data: text("data").notNull(),
   synced_at: text("synced_at").notNull(),
+});
+export const posts = sqliteTable("posts", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  excerpt: text("excerpt").notNull(),
+  cover_image: text("cover_image").notNull().default(""),
+  body: text("body").notNull(),
+  category: text("category").notNull(),
+  author: text("author").notNull(),
+  status: text("status").notNull().default("draft"),
+  published_at: text("published_at"),
+  created_at: text("created_at").notNull(),
+  updated_at: text("updated_at").notNull(),
 });
