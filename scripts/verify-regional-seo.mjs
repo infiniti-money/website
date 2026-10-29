@@ -23,7 +23,7 @@ async function get(path) {
   return r;
 }
 const admin = await (await get("/api/admin/data")).json(),
-  regional = admin.posts.filter((p) => p.area_key);
+  regional = admin.posts.filter((p) => p.area_key && p.status === "published");
 assert(regional.length > 100 && regional.length < 220);
 assert.equal(regional.filter((p) => p.area_key.startsWith("huyen-")).length, 10);
 const names = regional.map((p) =>
