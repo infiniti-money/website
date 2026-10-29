@@ -24,7 +24,25 @@ export type Post = {
 export type PostSummary = Omit<Post, "body">;
 const summaryColumns =
   "id,slug,title,excerpt,seo_title,seo_description,cover_image,category,author,tags,area_key,status,published_at,created_at,updated_at";
+async function refreshUneditedRegionalArticles() {
+  const marker = "regional-copy-cleanup-v2";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  const templates = regionalArticles();
+  // Only replace untouched seeded articles; preserve any CMS-edited content.
+  for (let start = 0; start < templates.length; start += 25)
+    await db().batch(
+      templates.slice(start, start + 25).map((p) =>
+        db().prepare(
+          "UPDATE posts SET title=?, excerpt=?, seo_title=?, seo_description=?, body=?, updated_at=? WHERE id=? AND area_key=? AND updated_at=created_at AND body LIKE '%Địa danh được đối chiếu%'",
+        ).bind(p.title, p.excerpt, p.seo_title, p.seo_description, p.body, now(), p.id, p.area_key),
+      ),
+    );
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)")
+    .bind(marker, now()).run();
+}
 export async function seedCompanyArticle() {
+  await refreshUneditedRegionalArticles();
   const marker = "editorial-regions-v1";
   if (
     await db()
