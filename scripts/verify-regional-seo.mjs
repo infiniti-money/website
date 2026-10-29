@@ -66,8 +66,11 @@ const partial = regional.find(
 );
 assert(partial);
 const page = await (await get("/bai-viet/" + partial.slug)).text();
-assert(page.includes("Hiệp Cường") && page.includes("Sơn Nam"));
-assert(page.includes("nhiều đơn vị mới"));
+assert(page.includes("xã Ngọc Thanh"));
+assert(!page.includes("Địa danh được đối chiếu"));
+assert(!page.includes("Theo khoản"));
+assert(!page.includes("đối chiếu tên cũ và tên sau sáp nhập"));
+assert(!page.includes("(cũ,"));
 assert(page.includes("Tag bài viết"));
 const data = [
   ...page.matchAll(
@@ -79,7 +82,7 @@ assert(
   data.some((d) => d["@graph"].some((n) => n["@type"] === "BreadcrumbList")),
 );
 pass(
-  "split locality mapping and Article/Breadcrumb structured data are present",
+  "clean locality copy and Article/Breadcrumb structured data are present",
 );
 const xml = await (await get("/sitemap.xml")).text();
 for (const p of regional) assert(xml.includes("/bai-viet/" + p.slug));
