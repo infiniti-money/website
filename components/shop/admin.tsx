@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Package,
   ShoppingBag,
+  Users,
   CalendarDays,
   Images,
   Plug,
@@ -35,6 +36,7 @@ const tabs = [
   ["overview", "Tổng quan", LayoutDashboard],
   ["products", "Sản phẩm", Package],
   ["orders", "Đơn hàng", ShoppingBag],
+  ["customers", "Khách hàng", Users],
   ["bookings", "Lịch kỹ thuật", CalendarDays],
   ["media", "Thư viện ảnh", Images],
   ["posts", "Bài viết", BookOpen],
@@ -574,6 +576,46 @@ export default function Admin({
                     )}
                   </div>
                 </>
+              )}
+              {tab === "customers" && (
+                <section className="admin-panel">
+                  <div className="admin-panel-head">
+                    <h3>Hồ sơ khách hàng ({data.customers?.length ?? 0})</h3>
+                    <span>Tự tổng hợp từ đơn hàng và lịch đặt đã lưu</span>
+                  </div>
+                  <label className="admin-search" style={{ margin: "12px 0", maxWidth: 440 }}>
+                    <Search size={16} />
+                    <input
+                      aria-label="Tìm khách hàng"
+                      placeholder="Tìm theo tên, số điện thoại, địa chỉ"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </label>
+                  <div className="table-wrap">
+                    <table>
+                      <thead><tr>
+                        <th>Khách hàng</th><th>Liên hệ</th>
+                        <th>Đơn hàng</th><th>Lịch kỹ thuật</th>
+                        <th>Lần đặt gần nhất</th>
+                      </tr></thead>
+                      <tbody>
+                        {(data.customers || []).filter((c: any) =>
+                          `${c.name} ${c.phone} ${c.address}`
+                            .toLocaleLowerCase("vi").includes(query.toLocaleLowerCase("vi"))
+                        ).map((c: any) => (
+                          <tr key={c.id}>
+                            <td><b>{c.name}</b></td>
+                            <td><small>{c.phone}</small><small>{c.address}</small></td>
+                            <td>{c.orders}</td><td>{c.bookings}</td>
+                            <td>{c.last_activity ? new Date(c.last_activity).toLocaleString("vi-VN") : "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="form-note">Thông tin được lưu cùng đơn hàng hoặc yêu cầu đặt lịch trong cơ sở dữ liệu, chỉ quản trị viên được xem. Số điện thoại trùng được gộp thành một hồ sơ.</p>
+                </section>
               )}
               {tab === "bookings" && (
                 <div className="admin-panel">
