@@ -481,7 +481,7 @@ export default function Storefront({
                       <span
                         className={p.stock ? "stock-dot" : "stock-dot out"}
                       />
-                      {p.stock ? "Còn hàng" : "Hết hàng"}
+                      {p.id.startsWith("demo-") ? "Hàng mẫu" : p.stock ? "Còn hàng" : "Hết hàng"}
                     </span>
                   </div>
                   <button
@@ -776,7 +776,7 @@ export default function Storefront({
                 {selected.specs}
               </div>
               <strong className="detail-price">Liên hệ để nhận báo giá</strong>
-              <p>Còn {selected.stock} sản phẩm · Bảo hành theo sản phẩm</p>
+              <p>{selected.id.startsWith("demo-") ? "Mục minh họa, chưa xác nhận tồn kho và giá bán." : `Còn ${selected.stock} sản phẩm · Bảo hành theo sản phẩm`}</p>
               <button
                 className="btn btn-blue"
                 disabled={!selected.stock}
