@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
+import { generateDemoProducts } from "@/lib/demo-products";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -8,6 +9,7 @@ import {
   ArrowUpRight,
   ArrowRight,
   Monitor,
+  Phone,
   Laptop,
   Camera,
   Printer,
@@ -55,7 +57,7 @@ import {
   paymentMethodName,
 } from "@/lib/payment-links";
 import WalletPayment from "./wallet-payment";
-const categoryIcons = [Monitor, Laptop, Monitor, Camera, Printer, Headphones];
+const categoryIcons = [Monitor, Laptop, Monitor, Phone, Headphones, Printer, Printer, Cpu, Headphones, Printer, Printer, Camera, Wifi];
 const serviceIcons = [Laptop, Printer, Camera, Wifi];
 export default function Storefront({
   products: initial,
@@ -79,7 +81,8 @@ export default function Storefront({
     [ordersOpen, setOrdersOpen] = useState(false),
     [chat, setChat] = useState(false),
     [mobile, setMobile] = useState(false),
-    [ready, setReady] = useState(false);
+    [ready, setReady] = useState(false),
+    [page, setPage] = useState(1);
   const { items, favorites, add, favorite } = useCart();
   useEffect(() => {
     const shortcut = (e: KeyboardEvent) => {
@@ -102,7 +105,9 @@ export default function Storefront({
     return () => document.removeEventListener("keydown", shortcut);
   }, []);
   const count = ready ? items.reduce((n, i) => n + i.quantity, 0) : 0;
-  const filtered = products
+  const demonstration = useMemo(() => generateDemoProducts(), []);
+  const allCatalog = useMemo(() => [...products, ...demonstration], [products, demonstration]);
+  const filtered = allCatalog
     .filter(
       (p) =>
         (category === "Tất cả" || p.category === category) &&
@@ -133,6 +138,7 @@ export default function Storefront({
     } catch {}
   }
   function choose(c: string) {
+    setPage(1);
     setCategory(c);
     setFavoritesOnly(false);
     document.querySelector("#san-pham")?.scrollIntoView({ behavior: "smooth" });
@@ -172,7 +178,7 @@ export default function Storefront({
             <input
               aria-label="Tìm sản phẩm"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               placeholder="Bạn đang tìm sản phẩm gì?"
             />
             <kbd>⌘ K</kbd>
@@ -379,7 +385,7 @@ export default function Storefront({
                   </div>
                   <span>{c}</span>
                   <small>
-                    {products.filter((p) => p.category === c).length} sản phẩm
+                    {allCatalog.filter((p) => p.category === c).length} mục
                   </small>
                   <ArrowUpRight size={15} />
                 </button>
@@ -407,6 +413,7 @@ export default function Storefront({
                   key={c}
                   className={category === c && !favoritesOnly ? "active" : ""}
                   onClick={() => {
+                    setPage(1);
                     setCategory(c);
                     setFavoritesOnly(false);
                   }}
@@ -420,7 +427,7 @@ export default function Storefront({
               <select
                 aria-label="Sắp xếp sản phẩm"
                 value={sort}
-                onChange={(e) => setSort(e.target.value)}
+                onChange={(e) => { setSort(e.target.value); setPage(1); }}
               >
                 <option value="featured">Nổi bật nhất</option>
                 <option value="low">Giá tăng dần</option>
@@ -429,7 +436,7 @@ export default function Storefront({
             </label>
           </div>
           <div className="product-grid">
-            {filtered.map((p, i) => (
+            {filtered.slice((page - 1) * 24, page * 24).map((p, i) => (
               <motion.article
                 className="product-card"
                 key={p.id}
@@ -490,9 +497,9 @@ export default function Storefront({
                     </div>
                     <button
                       className="add-button"
-                      disabled={!p.stock}
-                      onClick={() => addProduct(p)}
-                      aria-label={`Thêm ${p.name} vào giỏ`}
+                      disabled={!p.stock && !p.id.startsWith("demo-")}
+                      onClick={() => p.id.startsWith("demo-") ? setSelected(p) : addProduct(p)}
+                      aria-label={p.id.startsWith("demo-") ? `Xem thông tin ${p.name}` : `Thêm ${p.name} vào giỏ`}
                     >
                       <Plus size={19} />
                     </button>
@@ -501,6 +508,13 @@ export default function Storefront({
               </motion.article>
             ))}
           </div>
+          {filtered.length > 24 && (
+            <nav className="catalog-pagination" aria-label="Phân trang sản phẩm">
+              <button disabled={page === 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Trang trước</button>
+              <span>Trang {page} / {Math.ceil(filtered.length / 24)} · {filtered.length.toLocaleString("vi-VN")} mục</span>
+              <button disabled={page >= Math.ceil(filtered.length / 24)} onClick={() => setPage(p => Math.min(Math.ceil(filtered.length / 24), p + 1))}>Trang sau</button>
+            </nav>
+          )}
           {filtered.length === 0 && (
             <div className="empty-state">
               <Search size={36} />
