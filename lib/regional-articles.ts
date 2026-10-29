@@ -43,9 +43,18 @@ export function regionalAreas(): RegionalArea[] {
     details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
     related: [],
   }));
+  const legacy: RegionalArea[] = data.legacyUnits.map((u) => ({
+    key: `truoc-2024-${u.id}`,
+    name: u.name,
+    label: `${kinds[u.kind]} ${u.name}`,
+    group: "Xã/phường/thị trấn",
+    districtIds: [u.districtId],
+    details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
+    related: [],
+  }));
   // Ưu tiên xã/phường hiện hành và chỉ bổ sung một bài cho tên chưa xuất hiện.
   const seen = new Set(current.map((a) => a.label.normalize("NFC").trim().toLocaleLowerCase("vi")));
-  return [...current, ...previous.filter((a) => {
+  return [...current, ...[...previous, ...legacy].filter((a) => {
     const name = a.label.normalize("NFC").trim().toLocaleLowerCase("vi");
     if (seen.has(name)) return false;
     seen.add(name);
