@@ -120,7 +120,22 @@ async function publishMissingHistoricCommunes() {
   }
   await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker,date).run();
 }
+async function refreshGeneratedServiceCopy() {
+  const marker = "regional-distinct-copy-v1";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first()) return;
+  const templates = [...regionalArticles(), ...ecoparkArticles()];
+  // Only replace pristine imported posts. A CMS edit changes updated_at.
+  for (let i = 0; i < templates.length; i += 20) {
+    await db().batch(templates.slice(i, i + 20).map((p) =>
+      db().prepare(
+        "UPDATE posts SET body=?, cover_image=?, seo_title=?, seo_description=?, excerpt=?, updated_at=? WHERE id=? AND area_key=? AND updated_at=created_at",
+      ).bind(p.body,p.cover_image,p.seo_title,p.seo_description,p.excerpt,now(),p.id,p.area_key),
+    ));
+  }
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker,now()).run();
+}
 export async function seedCompanyArticle() {
+  await refreshGeneratedServiceCopy();
   await publishMissingHistoricCommunes();
   await archiveNoncurrentHungYenArticles();
   await renameRegionalCategory();
