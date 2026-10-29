@@ -99,7 +99,29 @@ async function archiveNoncurrentHungYenArticles() {
   await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)")
     .bind(marker, now()).run();
 }
+async function publishMissingHistoricCommunes() {
+  const marker = "regional-prior-communes-v1";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  const date = now();
+  const historic = regionalArticles().filter((p) => p.area_key.startsWith("cu-"));
+  for (let start = 0; start < historic.length; start += 20) {
+    await db().batch(historic.slice(start, start + 20).flatMap((p) => [
+      db().prepare(
+        "INSERT OR IGNORE INTO posts (id,slug,title,excerpt,cover_image,body,category,author,status,published_at,created_at,updated_at,seo_title,seo_description,tags,area_key) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      ).bind(p.id,p.slug,p.title,p.excerpt,p.cover_image,p.body,p.category,p.author,
+        "published",date,date,date,p.seo_title,p.seo_description,
+        JSON.stringify([...new Set(p.tags)]),p.area_key),
+      // Chỉ khôi phục bản sinh tự động, không thay đổi bài quản trị đã chỉnh sửa/lưu trữ.
+      db().prepare(
+        "UPDATE posts SET status='published' WHERE id=? AND area_key=? AND status='archived' AND updated_at=created_at",
+      ).bind(p.id,p.area_key),
+    ]));
+  }
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker,date).run();
+}
 export async function seedCompanyArticle() {
+  await publishMissingHistoricCommunes();
   await archiveNoncurrentHungYenArticles();
   await renameRegionalCategory();
   await archiveDuplicateRegionalArticles();
