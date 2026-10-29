@@ -64,6 +64,30 @@ const providerInfo: Record<
     ],
     docs: "https://cloudinary.com/documentation/upload_images",
   },
+  viettelpost: {
+    name: "Viettel Post",
+    description: "Cấu hình tài khoản Viettel Post để chuẩn bị tích hợp vận đơn và tra cứu giao hàng. Chưa tự động tạo đơn.",
+    keys: ["VIETTELPOST_USERNAME", "VIETTELPOST_PASSWORD"],
+    docs: "https://viettelpost.com.vn/",
+  },
+  ghn: {
+    name: "Giao Hàng Nhanh (GHN)",
+    description: "Chuẩn bị kết nối giao hàng GHN. Cần token và mã cửa hàng hợp lệ; chưa phát sinh đơn vận chuyển.",
+    keys: ["GHN_TOKEN", "GHN_SHOP_ID"],
+    docs: "https://api.ghn.vn/",
+  },
+  ghtk: {
+    name: "Giao Hàng Tiết Kiệm (GHTK)",
+    description: "Chuẩn bị kết nối GHTK bằng token do đối tác cấp; chưa tạo vận đơn tự động.",
+    keys: ["GHTK_TOKEN"],
+    docs: "https://giaohangtietkiem.vn/",
+  },
+  jnt: {
+    name: "J&T Express",
+    description: "Hướng dẫn kết nối J&T Express sau khi được cấp tài khoản đối tác và thông số API.",
+    keys: ["JNT_CUSTOMER_CODE", "JNT_API_KEY"],
+    docs: "https://jtexpress.vn/",
+  },
   haravan: {
     name: "Haravan Omnichannel",
     description:
@@ -532,8 +556,9 @@ export default function Admin({
                       </p>
                     </div>
                   </div>
+                  <h3 className="integration-section-heading">Thanh toán, hình ảnh và thương mại</h3>
                   <div className="integration-grid">
-                    {Object.entries(providerInfo).map(([key, p]) => (
+                    {Object.entries(providerInfo).filter(([key]) => !["viettelpost","ghn","ghtk","jnt"].includes(key)).map(([key, p]) => (
                       <article
                         className="admin-panel integration-card"
                         key={key}
@@ -586,6 +611,19 @@ export default function Admin({
                         )}
                       </article>
                     ))}
+                  </div>
+                  <div className="admin-panel channels-panel">
+                    <div>
+                      <h3>Đơn vị vận chuyển</h3>
+                      <p>Hỗ trợ hướng dẫn cấu hình Viettel Post, GHN, GHTK và J&T Express. Kết nối API chỉ có hiệu lực khi tài khoản đối tác được cấp quyền và tích hợp gửi đơn được kiểm thử. Hiện chưa tạo vận đơn hoặc gọi tính phí tự động.</p>
+                      <div className="shipping-provider-list">
+                        {(["viettelpost","ghn","ghtk","jnt"] as const).map((key) => (
+                          <button key={key} type="button" className="btn btn-outline small" onClick={() => setProvider(key)}>
+                            {providerInfo[key].name} · {data.integrations[key] ? "Đã cấu hình biến môi trường" : "Chưa cấu hình"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <div className="admin-panel channels-panel">
                     <div>
