@@ -8,23 +8,7 @@ const kinds: Record<string, string> = {
   "thi-xa": "thị xã",
   "thanh-pho": "thành phố",
 };
-type OldUnit = {
-  id: string;
-  name: string;
-  kind: string;
-  districtId: string;
-  partial?: boolean;
-};
-const oldUnits = [
-  ...new Map(
-    data.newUnits.flatMap((u) => u.oldUnits).map((u) => [u.id, u]),
-  ).values(),
-] as OldUnit[];
 const district = (id: string) => data.districts.find((d) => d.id === id)!;
-const districtLabel = (id: string) => {
-  const d = district(id);
-  return `${kinds[d.kind]} ${d.name}`;
-};
 export type RegionalArea = {
   key: string;
   name: string;
@@ -34,12 +18,9 @@ export type RegionalArea = {
   details: string;
   related: { key: string; label: string }[];
 };
-const link = (key: string, label: string) =>
-  `[${label}](/bai-viet/dich-vu-tai-${key})`;
 const newKey = (id: string) => `moi-${id}`;
-const oldKey = (id: string) => `cu-${id}`;
-const newLabel = (u: { kind: string; name: string }) => `${kinds[u.kind]} ${u.name}`;
-const oldLabel = (u: OldUnit) => `${kinds[u.kind]} ${u.name}`;
+const newLabel = (u: { kind: string; name: string }) =>
+  `${kinds[u.kind]} ${u.name}`;
 export function regionalAreas(): RegionalArea[] {
   // Chỉ 39 xã/phường đang có hiệu lực trên phần địa bàn Hưng Yên
   // trước khi hợp nhất với Thái Bình: 33 xã và 6 phường.
