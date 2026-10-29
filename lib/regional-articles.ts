@@ -23,7 +23,7 @@ const oldUnits = [
 const district = (id: string) => data.districts.find((d) => d.id === id)!;
 const districtLabel = (id: string) => {
   const d = district(id);
-  return `${kinds[d.kind]} ${d.name} (cũ)`;
+  return `${kinds[d.kind]} ${d.name}`;
 };
 export type RegionalArea = {
   key: string;
