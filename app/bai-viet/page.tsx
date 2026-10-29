@@ -73,6 +73,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
               <option value="moi">39 xã/phường hiện hành</option>
               <option value="cu">Xã/phường trước sáp nhập 2025</option>
               <option value="truoc-2024">Địa danh xã/phường trước 2024</option>
+              <option value="huyen">Huyện/thị xã/thành phố</option>
               <option value="ecopark">Các khu vực Ecopark</option>
             </select>
           </label>
