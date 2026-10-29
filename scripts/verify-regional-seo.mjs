@@ -25,6 +25,10 @@ async function get(path) {
 const admin = await (await get("/api/admin/data")).json(),
   regional = admin.posts.filter((p) => p.area_key && p.status === "published");
 assert(regional.length > 100 && regional.length < 220);
+const ecopark = regional.filter((p) => p.area_key.startsWith("ecopark-"));
+assert.equal(ecopark.length, 23, "23 Ecopark location articles");
+assert.equal(new Set(ecopark.map((p) => p.slug)).size, 23);
+assert(ecopark.every((p) => p.category === "Dịch vụ tại Hưng Yên"));
 assert.equal(regional.filter((p) => p.area_key.startsWith("huyen-")).length, 10);
 const names = regional.map((p) =>
   p.title.replace(/^.*? tại /, "").normalize("NFC").trim().toLocaleLowerCase("vi"),
