@@ -1,3 +1,4 @@
+import { serviceVariation } from "./service-article-variants";
 // Các địa danh thuộc khu đô thị Ecopark Văn Giang, Hưng Yên.
 // Nguồn đối chiếu: https://ecopark.com.vn/ecopark-overview.html
 // https://ecoparker.com.vn/ban-do-ecopark
@@ -177,12 +178,12 @@ export function ecoparkArticles() {
       seo_description: `Dịch vụ sửa laptop, máy tính, máy in, camera và Wi-Fi tại ${place}. Liên hệ Infiniti Seller 0867899987 để xác nhận lịch hỗ trợ.`,
       excerpt: `Tư vấn sửa máy tính, laptop, máy in và lắp đặt camera, Wi-Fi cho khách tại ${place}. Gửi thông tin thiết bị để nhận lịch và báo giá.`,
       tags: ["Dịch vụ tại Hưng Yên", "Ecopark", name, "Sửa laptop", "Sửa máy tính", "Sửa máy in", "Lắp camera", "Mạng Wi-Fi LAN"],
-      cover_image: "/images/sua-may-tinh-tai-nha.jpg",
+      cover_image: serviceVariation(`ecopark-${key}`, place, type).image,
       category: "Dịch vụ tại Hưng Yên",
       author: "Infiniti Seller",
       body: `# Sửa máy tính, laptop, máy in và lắp camera tại ${place}
 
-Bạn đang sinh sống hoặc kinh doanh tại **${name}**, Ecopark Văn Giang, Hưng Yên và cần hỗ trợ máy tính, máy in, Wi-Fi hoặc camera? Infiniti Seller tiếp nhận yêu cầu, tư vấn tình trạng thiết bị và xác nhận lịch hỗ trợ theo địa chỉ cụ thể. **${name}** là ${type} trong khu đô thị Ecopark; đây là bài giới thiệu khu vực phục vụ, không phải địa chỉ chi nhánh của cửa hàng.
+${serviceVariation(`ecopark-${key}`, place, type).intro}\n\nBạn đang sinh sống hoặc kinh doanh tại **${name}**, Ecopark Văn Giang, Hưng Yên và cần hỗ trợ máy tính, máy in, Wi-Fi hoặc camera? Infiniti Seller tiếp nhận yêu cầu, tư vấn tình trạng thiết bị và xác nhận lịch hỗ trợ theo địa chỉ cụ thể. **${name}** là ${type} trong khu đô thị Ecopark; đây là bài giới thiệu khu vực phục vụ, không phải địa chỉ chi nhánh của cửa hàng.
 
 > **Hotline/Zalo:** [0867899987](tel:0867899987) · [Nhắn Zalo](https://zalo.me/0867899987)
 > **Giờ liên hệ:** 8h00–21h00, kể cả cuối tuần và ngày lễ.
@@ -192,21 +193,21 @@ Bạn đang sinh sống hoặc kinh doanh tại **${name}**, Ecopark Văn Giang,
 
 Đối với ${type} này, khách hàng có thể cần hỗ trợ ${needs}. Kỹ thuật viên sẽ hỏi về thiết bị và vị trí thực tế trước khi đề xuất phương án, không mặc định mọi căn nhà hay căn hộ đều có cùng hạ tầng.
 
-## Sửa máy tính để bàn và laptop
+## Sửa máy tính để bàn và laptop\n\n${serviceVariation(`ecopark-${key}`, place, type).pc}\n\n${serviceVariation(`ecopark-${key}`, place, type).laptop}
 
 Tiếp nhận PC không lên nguồn, máy khởi động chậm, lỗi hệ điều hành, nóng máy hoặc lỗi kết nối thiết bị ngoại vi. Với laptop, cửa hàng tư vấn kiểm tra sạc, pin, bàn phím, màn hình, SSD và RAM theo model cụ thể. Khách nên gửi ảnh màn hình lỗi hoặc video mô tả để được tư vấn đúng vấn đề.
 
 Trước khi sửa, hai bên trao đổi về dữ liệu cần giữ và phương án sao lưu; chỉ tiến hành thay linh kiện khi đã thống nhất chi phí và tình trạng bảo hành.
 
-## Sửa máy in, kết nối máy in qua mạng
+## Sửa máy in, kết nối máy in qua mạng\n\n${serviceVariation(`ecopark-${key}`, place, type).printer}
 
 Hỗ trợ máy in không nhận lệnh, kẹt giấy, bản in mờ, lỗi chia sẻ USB/LAN/Wi-Fi và nhu cầu nạp mực. Hãy cung cấp model máy và ảnh bản in lỗi; việc thay mực, trống hoặc linh kiện được báo giá sau khi kiểm tra.
 
-## Lắp đặt và kiểm tra camera
+## Lắp đặt và kiểm tra camera\n\n${serviceVariation(`ecopark-${key}`, place, type).camera}
 
 Tư vấn camera quan sát cho nhà ở, văn phòng hoặc cửa hàng; kiểm tra mất hình, lỗi kết nối điện thoại và khả năng lưu hình. Vị trí lắp đặt, nguồn điện, mạng và quyền riêng tư cần được thống nhất trước khi thi công. Đối với tòa nhà hoặc phân khu có quy định quản lý, khách hàng cần được phép thi công theo quy định tại địa điểm.
 
-## Kiểm tra Wi-Fi và mạng LAN
+## Kiểm tra Wi-Fi và mạng LAN\n\n${serviceVariation(`ecopark-${key}`, place, type).wifi}
 
 Hỗ trợ Wi-Fi yếu, rớt kết nối, chia sẻ máy in, bấm đầu dây mạng, kiểm tra router và đề xuất bổ sung điểm phát khi cần. Với nhu cầu phủ sóng nhiều phòng hoặc nhiều tầng, phương án cần dựa trên khảo sát thực tế thay vì cam kết tốc độ chưa đo.
 
