@@ -48,6 +48,25 @@ export function regionalAreas(): RegionalArea[] {
     group: "Xã/phường mới 2025",
     districtIds: u.districtIds,
     details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
+    related: u.districtIds.map((id) => ({
+      key: `huyen-${id}`,
+      label: districtLabel(id),
+    })),
+  }));
+  const previous: RegionalArea[] = oldUnits.map((u) => {
+    const targets = data.newUnits.filter((n) =>
+      n.oldUnits.some((o) => o.id === u.id),
+    );
+    const legacy = data.legacyUnits.filter((l) =>
+      l.viaOldUnitIds.includes(u.id),
+    );
+    return {
+      key: oldKey(u.id),
+      name: u.name,
+      label: `${kinds[u.kind]} ${u.name}`,
+      group: "Xã/phường/thị trấn cũ 2025",
+      districtIds: [u.districtId],
+      details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: [
         ...targets.map((n) => ({ key: newKey(n.id), label: newLabel(n) })),
         { key: `huyen-${u.districtId}`, label: districtLabel(u.districtId) },
@@ -77,7 +96,7 @@ export function regionalAreas(): RegionalArea[] {
       label: `${kinds[d.kind]} ${d.name}`,
       group: "Huyện/thị xã/thành phố cũ",
       districtIds: [d.id],
-      details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
+      details: `Khi đặt lịch tại ${d.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: current
         .map((u) => ({ key: newKey(u.id), label: newLabel(u) }))
         .slice(0, 6),
