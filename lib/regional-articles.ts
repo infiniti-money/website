@@ -22,10 +22,7 @@ const newKey = (id: string) => `moi-${id}`;
 const newLabel = (u: { kind: string; name: string }) =>
   `${kinds[u.kind]} ${u.name}`;
 export function regionalAreas(): RegionalArea[] {
-  // Chỉ 39 xã/phường đang có hiệu lực trên phần địa bàn Hưng Yên
-  // trước khi hợp nhất với Thái Bình: 33 xã và 6 phường.
-  // Giữ area_key / slug hiện tại để không đổi URL các bài đang tồn tại.
-  return data.newUnits.map((u) => ({
+  const current: RegionalArea[] = data.newUnits.map((u) => ({
     key: newKey(u.id),
     name: u.name,
     label: newLabel(u),
@@ -34,6 +31,26 @@ export function regionalAreas(): RegionalArea[] {
     details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
     related: [],
   }));
+  const oldUnits = [
+    ...new Map(data.newUnits.flatMap((u) => u.oldUnits).map((u) => [u.id, u])).values(),
+  ];
+  const previous: RegionalArea[] = oldUnits.map((u) => ({
+    key: `cu-${u.id}`,
+    name: u.name,
+    label: `${kinds[u.kind]} ${u.name}`,
+    group: "Xã/phường/thị trấn",
+    districtIds: [u.districtId],
+    details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
+    related: [],
+  }));
+  // Ưu tiên xã/phường hiện hành và chỉ bổ sung một bài cho tên chưa xuất hiện.
+  const seen = new Set(current.map((a) => a.label.normalize("NFC").trim().toLocaleLowerCase("vi")));
+  return [...current, ...previous.filter((a) => {
+    const name = a.label.normalize("NFC").trim().toLocaleLowerCase("vi");
+    if (seen.has(name)) return false;
+    seen.add(name);
+    return true;
+  })];
 }
 
 const serviceTags = [
