@@ -39,12 +39,9 @@ export const money = (n: number) =>
     maximumFractionDigits: 0,
   }).format(n);
 export const categories = [
-  "Tất cả",
-  "Laptop",
-  "Máy tính PC",
-  "Camera",
-  "Máy in",
-  "Phụ kiện",
+  "Tất cả", "Laptop", "Máy tính PC", "Điện thoại", "Tai nghe",
+  "Máy in", "Máy photocopy", "Linh kiện PC", "Phụ kiện",
+  "Phụ kiện máy in", "Phụ kiện máy photocopy", "Camera", "Thiết bị mạng",
 ];
 export const services = [
   {

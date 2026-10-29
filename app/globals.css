@@ -4719,3 +4719,53 @@ td > select {
     display: inline-flex;
   }
 }
+
+
+/* Responsive commerce and article reading on desktop, tablets and phones */
+:root { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html { scroll-padding-top: 80px; }
+body { overflow-x: clip; }
+img, video { max-width: 100%; height: auto; }
+.product-card, .post-card, .category-grid > button { min-width: 0; }
+.product-name, .post-card h2, .article-prose, .article-title-block h1 { overflow-wrap: anywhere; }
+.article-prose table, .article-prose pre { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.article-cover { max-width: 100%; object-fit: cover; }
+:where(a,button,input,select,textarea):focus-visible { outline: 3px solid #087ecb; outline-offset: 3px; }
+.catalog-pagination { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; margin: 28px auto; }
+.catalog-pagination button { border: 1px solid #cbd5e1; border-radius: 10px; padding: 10px 16px; background: white; font: inherit; cursor: pointer; }
+.catalog-pagination button:disabled { opacity: .45; cursor: not-allowed; }
+.catalog-pagination span { font-size: 13px; text-align: center; }
+@media (max-width: 1100px) {
+  .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .category-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  .container { width: min(100% - 28px, 1280px); }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .article-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .article-search-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .article-header nav { flex-wrap: wrap; }
+  .article-prose { font-size: 15px; line-height: 1.85; }
+  input, select, textarea { font-size: 16px; }
+}
+@media (max-width: 520px) {
+  .container { width: min(100% - 24px, 1280px); }
+  .product-grid, .article-grid { grid-template-columns: minmax(0, 1fr); }
+  .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .article-search-form { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .product-toolbar { flex-wrap: wrap; }
+  .product-tabs { max-width: 100%; overflow-x: auto; }
+  .catalog-pagination button { min-height: 44px; }
+  .article-cover { height: auto; aspect-ratio: 16 / 9; }
+}
+
+
+/* Shareable product QR codes */
+.product-qr-link { border: 0; background: transparent; display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; color: #135b99; cursor: pointer; font-size: 12px; font-weight: 650; }
+.product-qr-link:hover { text-decoration: underline; }
+.product-qr-panel { margin: 18px 0; padding: 16px; border: 1px solid #dbe4ed; background: #f8fafc; border-radius: 14px; max-width: 320px; }
+.product-qr-panel > strong { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.product-qr-panel .product-qr-image { display: block; width: 220px; max-width: 100%; height: auto; aspect-ratio: 1; margin: 12px auto; border: 8px solid white; border-radius: 8px; }
+.product-qr-panel p { font-size: 12px; color: #52647b; line-height: 1.6; }
+@media (max-width: 520px) { .product-qr-panel { max-width: 100%; } .product-qr-link { min-height: 40px; } }

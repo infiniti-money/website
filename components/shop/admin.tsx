@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Package,
   ShoppingBag,
+  Users,
   CalendarDays,
   Images,
   Plug,
@@ -35,6 +36,7 @@ const tabs = [
   ["overview", "Tổng quan", LayoutDashboard],
   ["products", "Sản phẩm", Package],
   ["orders", "Đơn hàng", ShoppingBag],
+  ["customers", "Khách hàng", Users],
   ["bookings", "Lịch kỹ thuật", CalendarDays],
   ["media", "Thư viện ảnh", Images],
   ["posts", "Bài viết", BookOpen],
@@ -63,6 +65,78 @@ const providerInfo: Record<
       "CLOUDINARY_API_SECRET",
     ],
     docs: "https://cloudinary.com/documentation/upload_images",
+  },
+  shopee: {
+    name: "Shopee Open Platform",
+    description: "Chuẩn bị kết nối gian hàng Shopee, sản phẩm và đơn hàng theo quyền ứng dụng được cấp. Chưa tự đồng bộ.",
+    keys: ["SHOPEE_PARTNER_ID", "SHOPEE_PARTNER_KEY", "SHOPEE_SHOP_ID"],
+    docs: "https://open.shopee.com/",
+  },
+  lazada: {
+    name: "Lazada Open Platform",
+    description: "Kết nối cửa hàng Lazada qua ứng dụng đối tác, cần thông tin API và ủy quyền từ chủ shop.",
+    keys: ["LAZADA_APP_KEY", "LAZADA_APP_SECRET"],
+    docs: "https://open.lazada.com/",
+  },
+  tiktokshop: {
+    name: "TikTok Shop",
+    description: "Kết nối gian hàng TikTok Shop qua API đối tác và cơ chế cấp quyền riêng cho cửa hàng.",
+    keys: ["TIKTOK_SHOP_APP_KEY", "TIKTOK_SHOP_APP_SECRET"],
+    docs: "https://partner.tiktokshop.com/",
+  },
+  tiki: {
+    name: "Tiki",
+    description: "Chuẩn bị tích hợp gian hàng Tiki và quyền API quản lý sản phẩm, đơn hàng từ đối tác.",
+    keys: ["TIKI_API_TOKEN"],
+    docs: "https://sellercenter.tiki.vn/",
+  },
+  shopify: {
+    name: "Shopify",
+    description: "Kết nối cửa hàng Shopify qua Admin API với quyền phù hợp để quản lý hàng hóa và đơn hàng.",
+    keys: ["SHOPIFY_SHOP_DOMAIN", "SHOPIFY_ADMIN_ACCESS_TOKEN"],
+    docs: "https://shopify.dev/docs/api/admin-graphql",
+  },
+  woocommerce: {
+    name: "WooCommerce",
+    description: "Kết nối website bán hàng WooCommerce bằng REST API key và URL website HTTPS.",
+    keys: ["WOOCOMMERCE_STORE_URL", "WOOCOMMERCE_CONSUMER_KEY", "WOOCOMMERCE_CONSUMER_SECRET"],
+    docs: "https://woocommerce.github.io/woocommerce-rest-api-docs/",
+  },
+  sapo: {
+    name: "Sapo",
+    description: "Chuẩn bị tích hợp dữ liệu bán hàng với Sapo khi tài khoản có quyền API tương ứng.",
+    keys: ["SAPO_API_KEY", "SAPO_API_SECRET"],
+    docs: "https://www.sapo.vn/",
+  },
+  kiotviet: {
+    name: "KiotViet",
+    description: "Kết nối phần mềm KiotViet thông qua thông tin API từ tài khoản bán hàng có quyền tích hợp.",
+    keys: ["KIOTVIET_CLIENT_ID", "KIOTVIET_CLIENT_SECRET", "KIOTVIET_RETAILER"],
+    docs: "https://www.kiotviet.vn/",
+  },
+  viettelpost: {
+    name: "Viettel Post",
+    description: "Cấu hình tài khoản Viettel Post để chuẩn bị tích hợp vận đơn và tra cứu giao hàng. Chưa tự động tạo đơn.",
+    keys: ["VIETTELPOST_USERNAME", "VIETTELPOST_PASSWORD"],
+    docs: "https://viettelpost.com.vn/",
+  },
+  ghn: {
+    name: "Giao Hàng Nhanh (GHN)",
+    description: "Chuẩn bị kết nối giao hàng GHN. Cần token và mã cửa hàng hợp lệ; chưa phát sinh đơn vận chuyển.",
+    keys: ["GHN_TOKEN", "GHN_SHOP_ID"],
+    docs: "https://api.ghn.vn/",
+  },
+  ghtk: {
+    name: "Giao Hàng Tiết Kiệm (GHTK)",
+    description: "Chuẩn bị kết nối GHTK bằng token do đối tác cấp; chưa tạo vận đơn tự động.",
+    keys: ["GHTK_TOKEN"],
+    docs: "https://giaohangtietkiem.vn/",
+  },
+  jnt: {
+    name: "J&T Express",
+    description: "Hướng dẫn kết nối J&T Express sau khi được cấp tài khoản đối tác và thông số API.",
+    keys: ["JNT_CUSTOMER_CODE", "JNT_API_KEY"],
+    docs: "https://jtexpress.vn/",
   },
   haravan: {
     name: "Haravan Omnichannel",
@@ -503,6 +577,46 @@ export default function Admin({
                   </div>
                 </>
               )}
+              {tab === "customers" && (
+                <section className="admin-panel">
+                  <div className="admin-panel-head">
+                    <h3>Hồ sơ khách hàng ({data.customers?.length ?? 0})</h3>
+                    <span>Tự tổng hợp từ đơn hàng và lịch đặt đã lưu</span>
+                  </div>
+                  <label className="admin-search" style={{ margin: "12px 0", maxWidth: 440 }}>
+                    <Search size={16} />
+                    <input
+                      aria-label="Tìm khách hàng"
+                      placeholder="Tìm theo tên, số điện thoại, địa chỉ"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </label>
+                  <div className="table-wrap">
+                    <table>
+                      <thead><tr>
+                        <th>Khách hàng</th><th>Liên hệ</th>
+                        <th>Đơn hàng</th><th>Lịch kỹ thuật</th>
+                        <th>Lần đặt gần nhất</th>
+                      </tr></thead>
+                      <tbody>
+                        {(data.customers || []).filter((c: any) =>
+                          `${c.name} ${c.phone} ${c.address}`
+                            .toLocaleLowerCase("vi").includes(query.toLocaleLowerCase("vi"))
+                        ).map((c: any) => (
+                          <tr key={c.id}>
+                            <td><b>{c.name}</b></td>
+                            <td><small>{c.phone}</small><small>{c.address}</small></td>
+                            <td>{c.orders}</td><td>{c.bookings}</td>
+                            <td>{c.last_activity ? new Date(c.last_activity).toLocaleString("vi-VN") : "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="form-note">Thông tin được lưu cùng đơn hàng hoặc yêu cầu đặt lịch trong cơ sở dữ liệu, chỉ quản trị viên được xem. Số điện thoại trùng được gộp thành một hồ sơ.</p>
+                </section>
+              )}
               {tab === "bookings" && (
                 <div className="admin-panel">
                   <div className="admin-panel-head">
@@ -532,8 +646,9 @@ export default function Admin({
                       </p>
                     </div>
                   </div>
+                  <h3 className="integration-section-heading">Thanh toán, hình ảnh và thương mại</h3>
                   <div className="integration-grid">
-                    {Object.entries(providerInfo).map(([key, p]) => (
+                    {Object.entries(providerInfo).filter(([key]) => !["viettelpost","ghn","ghtk","jnt","shopee","lazada","tiktokshop","tiki","shopify","woocommerce","sapo","kiotviet"].includes(key)).map(([key, p]) => (
                       <article
                         className="admin-panel integration-card"
                         key={key}
@@ -586,6 +701,32 @@ export default function Admin({
                         )}
                       </article>
                     ))}
+                  </div>
+                  <div className="admin-panel channels-panel">
+                    <div>
+                      <h3>Bán hàng đa nền tảng</h3>
+                      <p>Thiết lập gian hàng trên các sàn thương mại điện tử và hệ thống bán hàng. Các tích hợp dưới đây là hướng dẫn cấu hình, chưa đồng bộ sản phẩm, giá, tồn kho hoặc đơn hàng nếu chưa xây dựng và cấp quyền kết nối API.</p>
+                      <div className="shipping-provider-list">
+                        {(["shopee","lazada","tiktokshop","tiki","shopify","woocommerce","sapo","kiotviet"] as const).map((key) => (
+                          <button key={key} type="button" className="btn btn-outline small" onClick={() => setProvider(key)}>
+                            {providerInfo[key].name} · {data.integrations[key] ? "Đã cấu hình biến môi trường" : "Chưa cấu hình"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="admin-panel channels-panel">
+                    <div>
+                      <h3>Đơn vị vận chuyển</h3>
+                      <p>Hỗ trợ hướng dẫn cấu hình Viettel Post, GHN, GHTK và J&T Express. Kết nối API chỉ có hiệu lực khi tài khoản đối tác được cấp quyền và tích hợp gửi đơn được kiểm thử. Hiện chưa tạo vận đơn hoặc gọi tính phí tự động.</p>
+                      <div className="shipping-provider-list">
+                        {(["viettelpost","ghn","ghtk","jnt"] as const).map((key) => (
+                          <button key={key} type="button" className="btn btn-outline small" onClick={() => setProvider(key)}>
+                            {providerInfo[key].name} · {data.integrations[key] ? "Đã cấu hình biến môi trường" : "Chưa cấu hình"}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <div className="admin-panel channels-panel">
                     <div>

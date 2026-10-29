@@ -88,6 +88,18 @@ export function integrations() {
       e.CLOUDINARY_API_SECRET
     ),
     haravan: !!e.HARAVAN_ACCESS_TOKEN,
+    shopee: !!(e.SHOPEE_PARTNER_ID && e.SHOPEE_PARTNER_KEY && e.SHOPEE_SHOP_ID),
+    lazada: !!(e.LAZADA_APP_KEY && e.LAZADA_APP_SECRET),
+    tiktokshop: !!(e.TIKTOK_SHOP_APP_KEY && e.TIKTOK_SHOP_APP_SECRET),
+    tiki: !!e.TIKI_API_TOKEN,
+    shopify: !!(e.SHOPIFY_SHOP_DOMAIN && e.SHOPIFY_ADMIN_ACCESS_TOKEN),
+    woocommerce: !!(e.WOOCOMMERCE_STORE_URL && e.WOOCOMMERCE_CONSUMER_KEY && e.WOOCOMMERCE_CONSUMER_SECRET),
+    sapo: !!(e.SAPO_API_KEY && e.SAPO_API_SECRET),
+    kiotviet: !!(e.KIOTVIET_CLIENT_ID && e.KIOTVIET_CLIENT_SECRET && e.KIOTVIET_RETAILER),
+    viettelpost: !!(e.VIETTELPOST_USERNAME && e.VIETTELPOST_PASSWORD),
+    ghn: !!(e.GHN_TOKEN && e.GHN_SHOP_ID),
+    ghtk: !!e.GHTK_TOKEN,
+    jnt: !!(e.JNT_CUSTOMER_CODE && e.JNT_API_KEY),
     r2: !!env.BUCKET,
   };
 }
