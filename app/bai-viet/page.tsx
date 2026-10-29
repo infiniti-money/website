@@ -22,9 +22,9 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const f = await searchParams;
   return {
-    title: "Bài viết & Dịch vụ Hưng Yên | Infiniti Seller",
+    title: "Bài viết & Dịch vụ tại Hưng Yên | Infiniti Seller",
     description:
-      "Tra cứu bài sửa máy tính, laptop, máy in, lắp camera, mạng và truyền hình theo xã cũ, xã mới và huyện cũ tại Hưng Yên.",
+      "Tra cứu bài sửa máy tính, laptop, máy in, lắp camera, mạng và truyền hình theo các xã và huyện tại Hưng Yên.",
     alternates: {
       canonical: query(f, Math.max(1, parseInt(f.page || "1") || 1)),
     },
@@ -46,7 +46,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
           </h1>
           <p>
             Tìm dịch vụ bạn cần và đối chiếu địa chỉ Hưng Yên theo tên xã cũ, xã
-            mới sau sáp nhập 2025 hoặc huyện cũ.
+            mới sau sáp nhập 2025 hoặc huyện.
           </p>
         </div>
         <form className="article-search-form" action="/bai-viet" method="get">
@@ -63,7 +63,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
             <select name="category" defaultValue={f.category || ""}>
               <option value="">Tất cả bài viết</option>
               <option value="editorial">Giới thiệu & dịch vụ chung</option>
-              <option value="regional">Dịch vụ Hưng Yên cũ</option>
+              <option value="regional">Dịch vụ tại Hưng Yên</option>
             </select>
           </label>
           <label>
@@ -71,9 +71,9 @@ export default async function ArticlesPage({ searchParams }: Props) {
             <select name="group" defaultValue={f.group || ""}>
               <option value="">Tất cả địa danh</option>
               <option value="moi">Xã/phường mới năm 2025</option>
-              <option value="cu">Xã/phường/thị trấn trước 7/2025</option>
-              <option value="truoc-2024">Tên cũ trước 12/2024</option>
-              <option value="huyen">Huyện/thị xã/thành phố cũ</option>
+              <option value="cu">Xã/phường/thị trấn</option>
+              <option value="truoc-2024">Xã/phường/thị trấn khác</option>
+              <option value="huyen">Huyện/thị xã/thành phố</option>
             </select>
           </label>
           {f.tag && <input type="hidden" name="tag" value={f.tag} />}

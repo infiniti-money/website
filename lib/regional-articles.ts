@@ -23,7 +23,7 @@ const oldUnits = [
 const district = (id: string) => data.districts.find((d) => d.id === id)!;
 const districtLabel = (id: string) => {
   const d = district(id);
-  return `${kinds[d.kind]} ${d.name} (cũ)`;
+  return `${kinds[d.kind]} ${d.name}`;
 };
 export type RegionalArea = {
   key: string;
@@ -38,10 +38,8 @@ const link = (key: string, label: string) =>
   `[${label}](/bai-viet/dich-vu-tai-${key})`;
 const newKey = (id: string) => `moi-${id}`;
 const oldKey = (id: string) => `cu-${id}`;
-const newLabel = (u: { kind: string; name: string }) =>
-  `${kinds[u.kind]} ${u.name} (sau sáp nhập 2025)`;
-const oldLabel = (u: OldUnit) =>
-  `${kinds[u.kind]} ${u.name} (${districtLabel(u.districtId)})`;
+const newLabel = (u: { kind: string; name: string }) => `${kinds[u.kind]} ${u.name}`;
+const oldLabel = (u: OldUnit) => `${kinds[u.kind]} ${u.name}`;
 export function regionalAreas(): RegionalArea[] {
   const current: RegionalArea[] = data.newUnits.map((u) => ({
     key: newKey(u.id),
@@ -49,7 +47,7 @@ export function regionalAreas(): RegionalArea[] {
     label: newLabel(u),
     group: "Xã/phường mới 2025",
     districtIds: u.districtIds,
-    details: `Theo khoản ${u.clause} Điều 1 Nghị quyết 1666/NQ-UBTVQH15, địa bàn ${kinds[u.kind]} ${u.name} được hình thành từ những đơn vị dưới đây. Danh sách đối chiếu giúp xác định địa chỉ nhận sửa chữa bằng cả tên quen dùng và tên sau sắp xếp.\n\n${u.oldUnits.map((o) => `- ${link(oldKey(o.id), oldLabel(o))}${"partial" in o && o.partial ? " — chỉ một phần địa bàn cũ được chuyển vào đơn vị này." : "."}`).join("\n")}\n\nKhi đặt lịch tại ${u.name}, hãy gửi thêm tên thôn/tổ dân phố, số nhà hoặc điểm hẹn và ghim vị trí. Những nơi sáp nhập một phần cần đối chiếu theo địa chỉ cụ thể; tên xã cũ riêng lẻ chưa đủ để xác định tuyến đến.`,
+    details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
     related: u.districtIds.map((id) => ({
       key: `huyen-${id}`,
       label: districtLabel(id),
@@ -65,10 +63,10 @@ export function regionalAreas(): RegionalArea[] {
     return {
       key: oldKey(u.id),
       name: u.name,
-      label: `${kinds[u.kind]} ${u.name} (cũ, ${district(u.districtId).name})`,
-      group: "Xã/phường/thị trấn cũ 2025",
+      label: `${kinds[u.kind]} ${u.name}`,
+      group: "Xã/phường/thị trấn",
       districtIds: [u.districtId],
-      details: `${kinds[u.kind]} ${u.name} là tên đơn vị thuộc ${districtLabel(u.districtId)} trước đợt sắp xếp năm 2025. Địa danh này được giữ trong bài để khách vẫn có thể tìm và mô tả địa chỉ theo cách quen thuộc.\n\nĐối chiếu theo Nghị quyết 1666/NQ-UBTVQH15, địa bàn liên quan đến:\n\n${targets.map((n) => `- ${link(newKey(n.id), newLabel(n))}.`).join("\n")}\n\n${targets.length > 1 ? "Địa bàn cũ được phân chia vào nhiều đơn vị mới. Cần đối chiếu thôn/tổ dân phố và vị trí thực tế, không thể xem toàn bộ xã cũ thuộc một xã mới duy nhất." : `Khi liên hệ tại ${u.name}, bạn có thể cung cấp đồng thời tên cũ và tên đơn vị sau sắp xếp để cửa hàng thống nhất địa điểm.`}${legacy.length ? `\n\nNhững tên trước đợt sắp xếp tháng 12/2024 có liên quan: ${legacy.map((l) => link(`truoc-2024-${l.id}`, `${kinds[l.kind]} ${l.name}`)).join(", ")}.` : ""}`,
+      details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: [
         ...targets.map((n) => ({ key: newKey(n.id), label: newLabel(n) })),
         { key: `huyen-${u.districtId}`, label: districtLabel(u.districtId) },
@@ -82,10 +80,10 @@ export function regionalAreas(): RegionalArea[] {
     return {
       key: `truoc-2024-${u.id}`,
       name: u.name,
-      label: `${kinds[u.kind]} ${u.name} (tên trước 12/2024, ${district(u.districtId).name})`,
-      group: "Tên cũ trước 12/2024",
+      label: `${kinds[u.kind]} ${u.name}`,
+      group: "Xã/phường/thị trấn",
       districtIds: [u.districtId],
-      details: `Bài viết dành cho khách vẫn sử dụng địa danh ${kinds[u.kind]} ${u.name}, ${districtLabel(u.districtId)}. Đây là tên trước khi Nghị quyết 1248/NQ-UBTVQH15 có hiệu lực ngày 1/12/2024.\n\nĐối chiếu qua các đơn vị trung gian: ${u.viaOldUnitIds.map((id) => link(oldKey(id), oldLabel(oldUnits.find((o) => o.id === id)!))).join(", ")}.\n\nSau đợt sắp xếp 2025, địa bàn có liên quan đến:\n\n${targets.map((n) => `- ${link(newKey(n.id), newLabel(n))}.`).join("\n")}\n\n${"note" in u ? u.note : "Tên cũ được dùng để nhận diện khu vực khi đặt lịch; hãy gửi kèm địa chỉ hiện tại và vị trí thực tế để xác nhận tuyến phục vụ."}`,
+      details: `Khi đặt lịch tại ${u.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: targets.map((n) => ({ key: newKey(n.id), label: newLabel(n) })),
     };
   });
@@ -95,16 +93,24 @@ export function regionalAreas(): RegionalArea[] {
     return {
       key: `huyen-${d.id}`,
       name: d.name,
-      label: districtLabel(d.id),
-      group: "Huyện/thị xã/thành phố cũ",
+      label: `${kinds[d.kind]} ${d.name}`,
+      group: "Huyện/thị xã/thành phố",
       districtIds: [d.id],
-      details: `Bài tổng hợp tiếp nhận yêu cầu trên địa bàn ${districtLabel(d.id)} thuộc tỉnh Hưng Yên trước sáp nhập cấp tỉnh. Tên cấp huyện được dùng theo địa danh lịch sử, không phải cấp hành chính hiện hành sau khi vận hành mô hình hai cấp.\n\nKhu vực này có ${previous.length} xã/phường/thị trấn ngay trước 1/7/2025. Bạn có thể mở bài theo địa chỉ quen dùng:\n\n${previous.map((u) => `- ${link(oldKey(u.id), `${kinds[u.kind]} ${u.name}`)}.`).join("\n")}\n\nCác đơn vị mới có liên quan đến địa bàn ${d.name}:\n\n${current.map((u) => `- ${link(newKey(u.id), newLabel(u))}.`).join("\n")}\n\nMột số xã mới nhận địa bàn từ nhiều huyện/thành phố cũ. Việc một xã xuất hiện trong danh sách này không có nghĩa toàn bộ xã mới nằm trọn trong ranh giới huyện cũ.`,
+      details: `Khi đặt lịch tại ${d.name}, vui lòng cung cấp địa chỉ cụ thể để cửa hàng xác nhận lịch hỗ trợ.`,
       related: current
         .map((u) => ({ key: newKey(u.id), label: newLabel(u) }))
         .slice(0, 6),
     };
   });
-  return [...current, ...previous, ...legacy, ...districts];
+  // Ưu tiên tên hiện hành; mỗi tên xã/phường/thị trấn chỉ có một bài,
+  // không sinh bài trùng với danh sách trước sắp xếp.
+  const seen = new Set<string>();
+  return [...current, ...previous, ...legacy, ...districts].filter((area) => {
+    const key = area.label.normalize("NFC").trim().toLocaleLowerCase("vi");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 const serviceTags = [
   "Sửa máy tính",
@@ -122,10 +128,10 @@ export function regionalArticles() {
     title: `Sửa máy tính, laptop, máy in & lắp camera tại ${area.label}`,
     seo_title: `Dịch vụ máy tính, camera, mạng tại ${area.label}`,
     seo_description: `Infiniti Seller nhận sửa máy tính, laptop, máy in, lắp camera, hỗ trợ mạng và truyền hình tại ${area.label}. Hotline 0867899987, 8h–21h.`,
-    excerpt: `Nhận yêu cầu sửa máy tính, laptop, máy in; lắp camera, mạng và hỗ trợ truyền hình tại ${area.label}. Đối chiếu tên cũ/mới, xem giá tham khảo và đặt lịch 0867899987.`,
+    excerpt: `Nhận yêu cầu sửa máy tính, laptop, máy in; lắp camera, mạng và hỗ trợ truyền hình tại ${area.label}. Xem giá tham khảo và đặt lịch 0867899987.`,
     tags: [
       ...serviceTags,
-      "Hưng Yên cũ",
+      "Hưng Yên",
       area.group,
       area.name,
       ...area.districtIds.map((id) => district(id).name),
@@ -133,17 +139,13 @@ export function regionalArticles() {
     cover_image: area.group.startsWith("Xã/phường mới")
       ? "/images/lap-dat-mang-tai-nha.jpg"
       : "/images/sua-may-tinh-tai-nha.jpg",
-    category: "Dịch vụ Hưng Yên",
+    category: "Dịch vụ tại Hưng Yên",
     author: "Infiniti Seller",
     body: `Bạn cần sửa máy tính không lên nguồn, laptop chạy chậm, máy in không nhận lệnh; lắp đặt camera, cải thiện mạng Wi-Fi hoặc kiểm tra kết nối truyền hình tại **${area.label}**? Infiniti Seller tiếp nhận thông tin thiết bị và địa chỉ để tư vấn phương án, xác nhận lịch hỗ trợ phù hợp.
 
 > **Hotline:** [0867899987](tel:0867899987) · [Nhắn Zalo](https://zalo.me/0867899987)
 > **Giờ liên hệ:** 8h00–21h00, kể cả cuối tuần và ngày lễ.
 > **Đặt lịch:** Cung cấp địa chỉ cụ thể để cửa hàng xác nhận khả năng đến nơi, thời gian và chi phí di chuyển trước khi thực hiện.
-
-## Địa chỉ ${area.name}: đối chiếu tên cũ và tên sau sáp nhập
-
-${area.details}
 
 ## Sửa chữa máy tính để bàn tại ${area.name}
 
@@ -209,12 +211,8 @@ Gọi [0867899987](tel:0867899987) hoặc [gửi ảnh thiết bị qua Zalo](ht
 
 [Gửi yêu cầu đặt lịch trên website](/#dich-vu) · [Xem bài dịch vụ và bảng giá đầy đủ](/bai-viet/sua-may-tinh-laptop-may-in-lap-mang-camera-tai-nha) · [Giới thiệu Infiniti Seller](/gioi-thieu).
 
-## Đọc thêm theo địa phương
+- [Tra cứu toàn bộ bài dịch vụ Hưng Yên](/bai-viet?category=regional).
 
-${area.related.map((r) => `- ${link(r.key, r.label)}.`).join("\n")}
-
-- [Tra cứu toàn bộ bài dịch vụ Hưng Yên cũ](/bai-viet?category=regional).
-
-*Địa danh được đối chiếu theo mốc 1/7/2025 và đợt sắp xếp 1/12/2024. Nguồn: [Nghị quyết 1666/NQ-UBTVQH15](${data.sources[0].url}) và [Nghị quyết 1248/NQ-UBTVQH15](${data.sources[1].url}). Tên huyện và tên xã cũ trong bài phục vụ tra cứu địa chỉ, không mô tả cấp hành chính hiện hành. Ảnh bìa là ảnh minh họa, ghi nguồn tại [bài dịch vụ tổng hợp](/bai-viet/sua-may-tinh-laptop-may-in-lap-mang-camera-tai-nha).*`,
+*Ảnh bìa là ảnh minh họa.*`,
   }));
 }

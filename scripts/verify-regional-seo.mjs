@@ -23,31 +23,28 @@ async function get(path) {
   return r;
 }
 const admin = await (await get("/api/admin/data")).json(),
-  regional = admin.posts.filter((p) => p.area_key);
-assert.equal(regional.length, 220);
-for (const [prefix, count] of [
-  ["moi-", 39],
-  ["cu-", 139],
-  ["truoc-2024-", 32],
-  ["huyen-", 10],
-])
-  assert.equal(
-    regional.filter((p) => p.area_key.startsWith(prefix)).length,
-    count,
-  );
-assert.equal(new Set(regional.map((p) => p.slug)).size, 220);
+  regional = admin.posts.filter((p) => p.area_key && p.status === "published");
+assert(regional.length > 100 && regional.length < 220);
+const ecopark = regional.filter((p) => p.area_key.startsWith("ecopark-"));
+assert.equal(ecopark.length, 23, "23 Ecopark location articles");
+assert.equal(new Set(ecopark.map((p) => p.slug)).size, 23);
+assert(ecopark.every((p) => p.category === "Dịch vụ tại Hưng Yên"));
+assert.equal(regional.filter((p) => p.area_key.startsWith("huyen-")).length, 10);
+const names = regional.map((p) =>
+  p.title.replace(/^.*? tại /, "").normalize("NFC").trim().toLocaleLowerCase("vi"),
+);
+assert.equal(new Set(names).size, names.length, "No duplicate displayed locality names");
 assert(!admin.posts.some((p) => "body" in p));
 for (const p of regional) {
   assert(JSON.parse(p.tags).length >= 8);
   assert(p.seo_title && p.seo_description);
   assert(p.title.length <= 180);
   assert(p.excerpt.length <= 400);
+  assert(!/\\(.*?\\)|\\bcũ\\b/i.test(p.title), "No old-name suffix in titles");
 }
-pass(
-  "all 220 distinct area articles have tags, SEO and lightweight admin summaries",
-);
+pass("distinct locality articles, district coverage, SEO and lightweight summaries");
 const list = await (await get("/bai-viet?category=regional")).text();
-assert.match(list, /<b>220<\/b>/);
+assert(list.includes(`<b>${regional.length}</b>`));
 assert.equal((list.match(/class="post-card"/g) || []).length, 12);
 const second = await (await get("/bai-viet?category=regional&page=2")).text();
 const cards = (s) =>
@@ -61,13 +58,14 @@ const search = await (
 assert(search.includes("Yên Mỹ"));
 assert.match(search, /<meta name="robots" content="noindex, follow"/);
 pass("accent-free search works and search-result duplicates are not indexed");
-const partial = regional.find(
-  (p) => p.area_key === "cu-xa-ngoc-thanh-kim-dong",
-);
+const partial = regional.find((p) => p.area_key.startsWith("cu-"));
 assert(partial);
 const page = await (await get("/bai-viet/" + partial.slug)).text();
-assert(page.includes("Hiệp Cường") && page.includes("Sơn Nam"));
-assert(page.includes("nhiều đơn vị mới"));
+assert(page.includes(partial.title.replace(/^.*? tại /, "")));
+assert(!page.includes("Địa danh được đối chiếu"));
+assert(!page.includes("Theo khoản"));
+assert(!page.includes("đối chiếu tên cũ và tên sau sáp nhập"));
+assert(!page.includes("(cũ,"));
 assert(page.includes("Tag bài viết"));
 const data = [
   ...page.matchAll(
@@ -79,7 +77,7 @@ assert(
   data.some((d) => d["@graph"].some((n) => n["@type"] === "BreadcrumbList")),
 );
 pass(
-  "split locality mapping and Article/Breadcrumb structured data are present",
+  "clean locality copy and Article/Breadcrumb structured data are present",
 );
 const xml = await (await get("/sitemap.xml")).text();
 for (const p of regional) assert(xml.includes("/bai-viet/" + p.slug));

@@ -2,6 +2,7 @@ import { db, now } from "./server";
 import { companyArticle } from "./company-article";
 import { serviceArticle } from "./service-article";
 import { regionalArticles } from "./regional-articles";
+import { ecoparkArticles } from "./ecopark-articles";
 import { normalizeSearch, postTags } from "./post-meta";
 export type Post = {
   id: string;
@@ -24,7 +25,67 @@ export type Post = {
 export type PostSummary = Omit<Post, "body">;
 const summaryColumns =
   "id,slug,title,excerpt,seo_title,seo_description,cover_image,category,author,tags,area_key,status,published_at,created_at,updated_at";
+async function refreshUneditedRegionalArticles() {
+  const marker = "regional-copy-cleanup-v2";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  const templates = regionalArticles();
+  // Only replace untouched seeded articles; preserve any CMS-edited content.
+  for (let start = 0; start < templates.length; start += 25)
+    await db().batch(
+      templates.slice(start, start + 25).map((p) =>
+        db().prepare(
+          "UPDATE posts SET title=?, excerpt=?, seo_title=?, seo_description=?, body=?, updated_at=? WHERE id=? AND area_key=? AND updated_at=created_at AND body LIKE '%Địa danh được đối chiếu%'",
+        ).bind(p.title, p.excerpt, p.seo_title, p.seo_description, p.body, now(), p.id, p.area_key),
+      ),
+    );
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)")
+    .bind(marker, now()).run();
+}
+async function archiveDuplicateRegionalArticles() {
+  const marker = "regional-dedup-v3";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  const keep = new Set(regionalArticles().map((post) => post.area_key));
+  const existing = (await db().prepare("SELECT area_key FROM posts WHERE area_key != ''").all<{ area_key: string }>()).results;
+  const duplicates = existing.filter((post) => !keep.has(post.area_key));
+  for (let start = 0; start < duplicates.length; start += 25)
+    await db().batch(duplicates.slice(start, start + 25).map((post) =>
+      db().prepare("UPDATE posts SET status='archived' WHERE area_key=? AND status='published'")
+        .bind(post.area_key),
+    ));
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker, now()).run();
+}
+async function renameRegionalCategory() {
+  const marker = "regional-category-rename-v1";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  await db().prepare("UPDATE posts SET category='Dịch vụ tại Hưng Yên' WHERE area_key != '' AND category='Dịch vụ Hưng Yên'").run();
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker, now()).run();
+}
+async function seedEcoparkArticles() {
+  const marker = "editorial-ecopark-v1";
+  if (await db().prepare("SELECT key FROM settings WHERE key=?").bind(marker).first())
+    return;
+  const date = now();
+  const templates = ecoparkArticles();
+  for (let start = 0; start < templates.length; start += 20)
+    await db().batch(templates.slice(start, start + 20).map((p) =>
+      db().prepare(
+        "INSERT OR IGNORE INTO posts (id,slug,title,excerpt,cover_image,body,category,author,status,published_at,created_at,updated_at,seo_title,seo_description,tags,area_key) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      ).bind(
+        p.id,p.slug,p.title,p.excerpt,p.cover_image,p.body,p.category,p.author,
+        "published",date,date,date,p.seo_title,p.seo_description,
+        JSON.stringify([...new Set(p.tags)]),p.area_key,
+      ),
+    ));
+  await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker,date).run();
+}
 export async function seedCompanyArticle() {
+  await renameRegionalCategory();
+  await archiveDuplicateRegionalArticles();
+  await refreshUneditedRegionalArticles();
+  await seedEcoparkArticles();
   const marker = "editorial-regions-v1";
   if (
     await db()
