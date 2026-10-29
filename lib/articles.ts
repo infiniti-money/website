@@ -82,10 +82,10 @@ async function seedEcoparkArticles() {
   await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker,date).run();
 }
 export async function seedCompanyArticle() {
-  await seedEcoparkArticles();
   await renameRegionalCategory();
   await archiveDuplicateRegionalArticles();
   await refreshUneditedRegionalArticles();
+  await seedEcoparkArticles();
   const marker = "editorial-regions-v1";
   if (
     await db()
