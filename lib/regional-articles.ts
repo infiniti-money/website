@@ -1,3 +1,4 @@
+import { serviceVariation } from "./service-article-variants";
 import data from "@/data/hung-yen-localities.json";
 export const regionalData = data;
 const kinds: Record<string, string> = {
@@ -81,6 +82,7 @@ const serviceTags = [
 ];
 export function regionalArticles() {
   return regionalAreas().map((area) => ({
+    // Local context is selected deterministically for each location.
     id: `regional-v1-${area.key}`,
     area_key: area.key,
     slug: `dich-vu-tai-${area.key}`,
@@ -95,18 +97,16 @@ export function regionalArticles() {
       area.name,
       ...area.districtIds.map((id) => district(id).name),
     ],
-    cover_image: area.group.startsWith("Xã/phường mới")
-      ? "/images/lap-dat-mang-tai-nha.jpg"
-      : "/images/sua-may-tinh-tai-nha.jpg",
+    cover_image: serviceVariation(area.key, area.label, area.group).image,
     category: "Dịch vụ tại Hưng Yên",
     author: "Infiniti Seller",
-    body: `Bạn cần sửa máy tính không lên nguồn, laptop chạy chậm, máy in không nhận lệnh; lắp đặt camera, cải thiện mạng Wi-Fi hoặc kiểm tra kết nối truyền hình tại **${area.label}**? Infiniti Seller tiếp nhận thông tin thiết bị và địa chỉ để tư vấn phương án, xác nhận lịch hỗ trợ phù hợp.
+    body: `${serviceVariation(area.key, area.label, area.group).intro}\n\nBạn cần sửa máy tính không lên nguồn, laptop chạy chậm, máy in không nhận lệnh; lắp đặt camera, cải thiện mạng Wi-Fi hoặc kiểm tra kết nối truyền hình tại **${area.label}**? Infiniti Seller tiếp nhận thông tin thiết bị và địa chỉ để tư vấn phương án, xác nhận lịch hỗ trợ phù hợp.
 
 > **Hotline:** [0867899987](tel:0867899987) · [Nhắn Zalo](https://zalo.me/0867899987)
 > **Giờ liên hệ:** 8h00–21h00, kể cả cuối tuần và ngày lễ.
 > **Đặt lịch:** Cung cấp địa chỉ cụ thể để cửa hàng xác nhận khả năng đến nơi, thời gian và chi phí di chuyển trước khi thực hiện.
 
-## Sửa chữa máy tính để bàn tại ${area.name}
+## Sửa chữa máy tính để bàn tại ${area.name}\n\n${serviceVariation(area.key, area.label, area.group).pc}
 
 Nhận kiểm tra máy không khởi động, treo khi mở ứng dụng, lỗi màn hình xanh, quạt kêu hoặc máy nóng bất thường. Khi liên hệ, bạn nên mô tả máy có sáng đèn hay quay quạt không, lỗi xuất hiện trước hay sau khi cài đặt/nâng cấp và công việc cần ưu tiên khôi phục.
 
@@ -114,13 +114,13 @@ Nhận kiểm tra máy không khởi động, treo khi mở ứng dụng, lỗi 
 - Tư vấn nâng cấp RAM, SSD và kiểm tra tương thích trước khi thay linh kiện.
 - Vệ sinh, kiểm tra tản nhiệt và trao đổi phương án theo tình trạng máy.
 
-## Sửa laptop, vệ sinh và nâng cấp
+## Sửa laptop, vệ sinh và nâng cấp\n\n${serviceVariation(area.key, area.label, area.group).laptop}
 
 Hỗ trợ laptop chạy chậm, lỗi bàn phím, pin, sạc, màn hình và kết nối Wi-Fi. Bạn hãy gửi hãng, model và ảnh/video lỗi qua Zalo để việc tư vấn tập trung đúng thiết bị. Nếu máy còn bảo hành nhà sản xuất, cần trao đổi trước khi tháo máy hoặc thay linh kiện.
 
 Trước khi xử lý, khách hàng và kỹ thuật viên thống nhất phạm vi can thiệp. Dữ liệu cần giữ, tài khoản đang dùng và nhu cầu sao lưu được trao đổi; không yêu cầu gửi mật khẩu hoặc thông tin ngân hàng qua bài viết.
 
-## Sửa máy in và nạp mực tại ${area.name}
+## Sửa máy in và nạp mực tại ${area.name}\n\n${serviceVariation(area.key, area.label, area.group).printer}
 
 Tiếp nhận máy in kẹt giấy, không cuốn giấy, bản in mờ/lem, in trắng hoặc mất kết nối USB, LAN, Wi-Fi. Với nhu cầu nạp mực hoặc thay trống/gạt/bao lụa, cần xác định đúng model và kiểm tra tình trạng vật tư.
 
@@ -128,13 +128,13 @@ Tiếp nhận máy in kẹt giấy, không cuốn giấy, bản in mờ/lem, in 
 - Cho biết máy dùng riêng hay chia sẻ giữa nhiều máy tính.
 - Kỹ thuật viên kiểm tra, báo hạng mục và chi phí trước khi xử lý.
 
-## Tư vấn, lắp đặt và sửa camera
+## Tư vấn, lắp đặt và sửa camera\n\n${serviceVariation(area.key, area.label, area.group).camera}
 
 Hỗ trợ kiểm tra camera mất hình, không xem từ điện thoại, lỗi lưu trữ; tư vấn vị trí lắp mới, góc quan sát và kết nối mạng. Phương án được trao đổi theo số vị trí cần theo dõi, điều kiện trong/ngoài nhà, nguồn điện và thời gian lưu mong muốn.
 
 Khi bàn giao, khách hàng kiểm tra hình ảnh trực tiếp, khả năng xem lại và quyền truy cập tài khoản. Thiết bị, vật tư, công lắp đặt và điều kiện bảo hành được làm rõ trong báo giá cụ thể.
 
-## Dịch vụ mạng Wi-Fi, LAN
+## Dịch vụ mạng Wi-Fi, LAN\n\n${serviceVariation(area.key, area.label, area.group).wifi}
 
 Nhận yêu cầu Wi-Fi yếu, mất mạng từng khu vực, dây/đầu nối lỗi hoặc cần thêm điểm phát. Khi đặt lịch tại ${area.name}, hãy mô tả số tầng, nơi đặt router và vị trí cần kết nối máy tính, máy in hoặc camera.
 
