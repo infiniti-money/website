@@ -355,7 +355,45 @@ async function handler(req: Request, ctx: Ctx) {
               )
               .all(),
           ]);
+        // Hồ sơ khách được tổng hợp từ đơn và lịch đã lưu trong D1.
+        // Không tạo bản sao PII; chỉ tài khoản quản trị có quyền truy cập.
+        const customerMap = new Map<string, {
+          id: string; name: string; phone: string; address: string;
+          orders: number; bookings: number; total_spent: number; last_activity: string;
+        }>();
+        for (const [rows, kind] of [
+          [orders.results, "order"],
+          [bookings.results, "booking"],
+        ] as const) for (const row of rows as Array<Record<string, unknown>>) {
+          try {
+            const c = JSON.parse(String(row.customer ?? "{}")) as {
+              name?: string; phone?: string; address?: string;
+            };
+            if (!c.phone) continue;
+            const key = c.phone.replace(/[^0-9+]/g, "").replace(/^\+84/, "0");
+            const old = customerMap.get(key);
+            const timestamp = String(row.created_at ?? "");
+            const customerRow = old ?? {
+              id: key, name: c.name || "", phone: c.phone, address: c.address || "",
+              orders: 0, bookings: 0, total_spent: 0, last_activity: "",
+            };
+            if (!old || timestamp >= old.last_activity) {
+              customerRow.name = c.name || customerRow.name;
+              customerRow.address = c.address || customerRow.address;
+              customerRow.last_activity = timestamp;
+            }
+            if (kind === "order") {
+              customerRow.orders++;
+              customerRow.total_spent += Number(row.total) || 0;
+            } else customerRow.bookings++;
+            customerMap.set(key, customerRow);
+          } catch { /* Ignore malformed historical entries. */ }
+        }
+        const customers = [...customerMap.values()].sort(
+          (a,b) => b.last_activity.localeCompare(a.last_activity),
+        );
         return Response.json({
+          customers,
           products: products.results,
           orders: orders.results,
           bookings: bookings.results,
