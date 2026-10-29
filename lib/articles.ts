@@ -114,8 +114,8 @@ async function publishMissingHistoricCommunes() {
         JSON.stringify([...new Set(p.tags)]),p.area_key),
       // Chỉ khôi phục bản sinh tự động, không thay đổi bài quản trị đã chỉnh sửa/lưu trữ.
       db().prepare(
-        "UPDATE posts SET status='published' WHERE id=? AND area_key=? AND status='archived' AND updated_at=created_at",
-      ).bind(p.id,p.area_key),
+        "UPDATE posts SET status='published' WHERE id=? AND area_key=? AND status='archived' AND (updated_at=created_at OR body=?)",
+      ).bind(p.id,p.area_key,p.body),
     ]));
   }
   await db().prepare("INSERT OR IGNORE INTO settings (key,value) VALUES (?,?)").bind(marker,date).run();
