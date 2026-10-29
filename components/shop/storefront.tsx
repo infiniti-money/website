@@ -486,10 +486,7 @@ export default function Storefront({
                   <p className="product-specs">{p.specs}</p>
                   <div className="price-row">
                     <div>
-                      <strong>{money(p.price)}</strong>
-                      {p.original_price > p.price && (
-                        <s>{money(p.original_price)}</s>
-                      )}
+                      <strong>Liên hệ</strong>
                     </div>
                     <button
                       className="add-button"
@@ -522,7 +519,7 @@ export default function Storefront({
             </div>
           )}
           <p className="catalog-note">
-            Danh mục và giá hiện là dữ liệu mẫu. Cửa hàng có thể cập nhật sản
+            Danh mục sản phẩm hiện có giá theo báo giá trực tiếp. Cửa hàng có thể cập nhật sản
             phẩm thực tế trong phần quản trị.
           </p>
         </section>
@@ -764,7 +761,7 @@ export default function Storefront({
                 <Cpu size={17} />
                 {selected.specs}
               </div>
-              <strong className="detail-price">{money(selected.price)}</strong>
+              <strong className="detail-price">Liên hệ để nhận báo giá</strong>
               <p>Còn {selected.stock} sản phẩm · Bảo hành theo sản phẩm</p>
               <button
                 className="btn btn-blue"
