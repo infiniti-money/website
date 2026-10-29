@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { serviceHash } from "@/lib/service-article-variants";
 export const runtime = "edge";
 function xml(value: string) { return value.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&apos;"}[c]!)); }
@@ -6,6 +7,39 @@ export async function GET(request: Request) {
   const key = (url.searchParams.get("key") || "").slice(0, 120);
   const place = (url.searchParams.get("place") || "Hưng Yên").slice(0, 75);
   const focus = (url.searchParams.get("focus") || "kỹ thuật").slice(0, 35);
+  // Select an actual service photo based on the article topic when Pexels is configured.
+  // Keep the API key server-side; never expose it in the rendered HTML.
+  const apiKey = (env as unknown as Record<string, string>).PEXELS_API_KEY;
+  if (apiKey && key && url.searchParams.get("illustration") !== "1") {
+    const searchTerms: Record<string, string> = {
+      "máy tính": "computer repair technician",
+      laptop: "laptop computer repair",
+      "máy in": "printer office repair",
+      camera: "cctv security camera installation",
+      "Wi-Fi": "wifi router network installation",
+    };
+    const query = searchTerms[focus] || "computer technician repair";
+    const seed = serviceHash(key);
+    const page = 1 + seed % 15;
+    try {
+      const upstream = await fetch(
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=landscape&per_page=30&page=${page}`,
+        { headers: { Authorization: apiKey }, signal: AbortSignal.timeout(4500) },
+      );
+      if (upstream.ok) {
+        const payload = await upstream.json() as {
+          photos?: Array<{ src?: { large2x?: string; large?: string }; url?: string }>;
+        };
+        const photos = payload.photos ?? [];
+        const photo = photos.length ? photos[Math.floor(seed / 15) % photos.length] : undefined;
+        const chosen = photo?.src?.large2x || photo?.src?.large;
+        if (chosen && new URL(chosen).hostname === "images.pexels.com")
+          return Response.redirect(chosen, 302);
+      }
+    } catch {
+      // License-safe, generated illustration stays available during API failures.
+    }
+  }
   const hash = serviceHash(key);
   const hues = [204, 161, 225, 28, 190, 255, 135, 345];
   const hue = hues[hash % hues.length];
