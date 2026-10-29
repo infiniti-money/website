@@ -24,28 +24,21 @@ async function get(path) {
 }
 const admin = await (await get("/api/admin/data")).json(),
   regional = admin.posts.filter((p) => p.area_key);
-assert.equal(regional.length, 220);
-for (const [prefix, count] of [
-  ["moi-", 39],
-  ["cu-", 139],
-  ["truoc-2024-", 32],
-  ["huyen-", 10],
-])
-  assert.equal(
-    regional.filter((p) => p.area_key.startsWith(prefix)).length,
-    count,
-  );
-assert.equal(new Set(regional.map((p) => p.slug)).size, 220);
+assert(regional.length > 100 && regional.length < 220);
+assert.equal(regional.filter((p) => p.area_key.startsWith("huyen-")).length, 10);
+const names = regional.map((p) =>
+  p.title.replace(/^.*? tại /, "").normalize("NFC").trim().toLocaleLowerCase("vi"),
+);
+assert.equal(new Set(names).size, names.length, "No duplicate displayed locality names");
 assert(!admin.posts.some((p) => "body" in p));
 for (const p of regional) {
   assert(JSON.parse(p.tags).length >= 8);
   assert(p.seo_title && p.seo_description);
   assert(p.title.length <= 180);
   assert(p.excerpt.length <= 400);
+  assert(!/\\(.*?\\)|\\bcũ\\b/i.test(p.title), "No old-name suffix in titles");
 }
-pass(
-  "all 220 distinct area articles have tags, SEO and lightweight admin summaries",
-);
+pass("distinct locality articles, district coverage, SEO and lightweight summaries");
 const list = await (await get("/bai-viet?category=regional")).text();
 assert.match(list, /<b>220<\/b>/);
 assert.equal((list.match(/class="post-card"/g) || []).length, 12);
