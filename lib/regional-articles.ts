@@ -211,10 +211,6 @@ Gọi [0867899987](tel:0867899987) hoặc [gửi ảnh thiết bị qua Zalo](ht
 
 [Gửi yêu cầu đặt lịch trên website](/#dich-vu) · [Xem bài dịch vụ và bảng giá đầy đủ](/bai-viet/sua-may-tinh-laptop-may-in-lap-mang-camera-tai-nha) · [Giới thiệu Infiniti Seller](/gioi-thieu).
 
-## Đọc thêm theo địa phương
-
-${area.related.map((r) => `- ${link(r.key, r.label)}.`).join("\n")}
-
 - [Tra cứu toàn bộ bài dịch vụ Hưng Yên](/bai-viet?category=regional).
 
 *Ảnh bìa là ảnh minh họa.*`,
